@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Raw CMS downloads and the built warehouse are reproducible from pipeline/download.py + pipeline/build.py
+data/raw/
+data/*.duckdb
+data/*.duckdb.wal
+*.part
+
+# Star-schema Parquet exports (~26 MB) are rebuilt by pipeline/build.py; report and quality CSVs are committed.
+outputs/powerbi/*.parquet
+
+# Office lock files
+~$*

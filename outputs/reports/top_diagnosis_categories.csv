@@ -1,0 +1,26 @@
+cost_rank,category_code,category_description,chapter_description,paid_amount,pct_of_medical_paid,claim_count,members,paid_per_claim
+1,N18,Chronic kidney disease (CKD),Diseases of the genitourinary system,229326290.40,23.18,236041,1283,971.55
+2,Z34,Encounter for supervision of normal pregnancy,Factors influencing health status and contact with health services,139714542.50,14.12,9968,566,14016.31
+3,C50,Malignant neoplasm of breast,Neoplasms,84948222.46,8.59,15591,412,5448.54
+4,Z73,Problems related to life management difficulty,Factors influencing health status and contact with health services,62062605.03,6.27,47121,5164,1317.09
+5,Z60,Problems related to social environment,Factors influencing health status and contact with health services,45990503.87,4.65,37626,4503,1222.31
+6,E78,Disorders of lipoprotein metabolism and other lipidemias,"Endocrine, nutritional and metabolic diseases",29857553.34,3.02,24313,1883,1228.05
+7,Z95,Presence of cardiac and vascular implants and grafts,Factors influencing health status and contact with health services,22885295.26,2.31,1892,527,12095.82
+8,J20,Acute bronchitis,Diseases of the respiratory system,20126543.79,2.03,8505,2298,2366.44
+9,R93,Abnormal findings on diagnostic imaging of other body structures,"Symptoms, signs and abnormal findings, not elsewhere classified",19894141.97,2.01,2887,674,6890.94
+10,C34,Malignant neoplasm of bronchus and lung,Neoplasms,19381655.30,1.96,283,23,68486.41
+11,T50,"Poisoning by, adverse effect of and underdosing of diuretics and other and unspecified drugs, medicaments and biological substances","Injury, poisoning and other consequences of external causes",18496431.38,1.87,20029,719,923.48
+12,I25,Chronic ischemic heart disease,Diseases of the circulatory system,17352425.79,1.75,6081,984,2853.55
+13,T74,"Adult and child abuse, neglect and other maltreatment, confirmed","Injury, poisoning and other consequences of external causes",17284165.52,1.75,15254,2617,1133.09
+14,J32,Chronic sinusitis,Diseases of the respiratory system,12805862.60,1.29,6775,1739,1890.16
+15,J45,Asthma,Diseases of the respiratory system,11624173.50,1.18,4787,435,2428.28
+16,J01,Acute sinusitis,Diseases of the respiratory system,11075023.45,1.12,6289,1585,1761.02
+17,I21,Acute myocardial infarction,Diseases of the circulatory system,9620653.90,0.97,630,269,15270.88
+18,C18,Malignant neoplasm of colon,Neoplasms,9519176.38,0.96,1118,256,8514.47
+19,K63,Other diseases of intestine,Diseases of the digestive system,9199971.46,0.93,1704,392,5399.04
+20,B97,Viral agents as the cause of diseases classified elsewhere,Certain infectious and parasitic diseases,8122725.72,0.82,4382,1345,1853.66
+21,B34,Viral infection of unspecified site,Certain infectious and parasitic diseases,7959866.09,0.8,3966,1308,2007.03
+22,B00,Herpesviral [herpes simplex] infections,Certain infectious and parasitic diseases,7607584.15,0.77,3362,1251,2262.82
+23,L20,Atopic dermatitis,Diseases of the skin and subcutaneous tissue,6762554.49,0.68,3101,321,2180.77
+24,J03,Acute tonsillitis,Diseases of the respiratory system,6759729.88,0.68,3376,1033,2002.29
+25,J44,Other chronic obstructive pulmonary disease,Diseases of the respiratory system,5367854.36,0.54,415,116,12934.59

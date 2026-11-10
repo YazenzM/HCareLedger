@@ -1,0 +1,103 @@
+table_name,category,check_name,rows_checked,rows_flagged,pct_flagged
+beneficiary,consistency,Age at end of year disagrees with birth date,86917,0,0.0
+beneficiary,consistency,"Birth date, sex or state changes across years (beneficiaries)",10000,0,0.0
+beneficiary,consistency,Dual-eligible months total disagrees with monthly dual status codes,86917,20805,23.937
+beneficiary,consistency,Part B months total disagrees with monthly buy-in flags,86917,4972,5.72
+beneficiary,consistency,Part D months total disagrees with monthly contract IDs,86917,2314,2.662
+carrier,consistency,"Header fields (bene, from date, payment) vary across lines of one claim",90705,0,0.0
+carrier,consistency,Line payments do not sum to claim payment (claims),90705,0,0.0
+dme,consistency,"Header fields (bene, from date, payment) vary across lines of one claim",37782,24,0.064
+dme,consistency,Line payments do not sum to claim payment (claims),37782,0,0.0
+hha,consistency,"Header fields (bene, from date, payment) vary across lines of one claim",493,0,0.0
+hha,consistency,Line payments do not sum to claim payment (claims),493,487,98.783
+hospice,consistency,"Header fields (bene, from date, payment) vary across lines of one claim",1086,0,0.0
+hospice,consistency,Line payments do not sum to claim payment (claims),1086,1086,100.0
+inpatient,consistency,"Header fields (bene, from date, payment) vary across lines of one claim",20867,0,0.0
+outpatient,consistency,"Header fields (bene, from date, payment) vary across lines of one claim",402653,0,0.0
+outpatient,consistency,Line payments do not sum to claim payment (claims),402653,306651,76.158
+pde,consistency,Cost components do not sum to total drug cost,515520,0,0.0
+snf,consistency,"Header fields (bene, from date, payment) vary across lines of one claim",1632,0,0.0
+beneficiary,dates,Birth date after end of reference year,86917,0,0.0
+beneficiary,dates,Enrollment year with no claims coverage (after Mar-2023),86917,19660,22.619
+carrier,dates,Claim thru date before from date,1121004,0,0.0
+carrier,dates,Service date after beneficiary death date,1121004,0,0.0
+carrier,dates,Service date before beneficiary birth date,1121004,0,0.0
+carrier,dates,Service date outside data period (before 2015 or after Mar-2023),1121004,0,0.0
+carrier,dates,Unparseable claim from/thru date,1121004,0,0.0
+dme,dates,Claim thru date before from date,103828,0,0.0
+dme,dates,Service date after beneficiary death date,103828,0,0.0
+dme,dates,Service date before beneficiary birth date,103828,0,0.0
+dme,dates,Service date outside data period (before 2015 or after Mar-2023),103828,0,0.0
+dme,dates,Unparseable claim from/thru date,103828,0,0.0
+hha,dates,Claim thru date before from date,6215,0,0.0
+hha,dates,Service date after beneficiary death date,6215,0,0.0
+hha,dates,Service date before beneficiary birth date,6215,0,0.0
+hha,dates,Service date outside data period (before 2015 or after Mar-2023),6215,0,0.0
+hha,dates,Unparseable claim from/thru date,6215,0,0.0
+hospice,dates,Claim thru date before from date,12107,0,0.0
+hospice,dates,Discharge date before admission date,12107,0,0.0
+hospice,dates,Service date after beneficiary death date,12107,0,0.0
+hospice,dates,Service date before beneficiary birth date,12107,0,0.0
+hospice,dates,Service date outside data period (before 2015 or after Mar-2023),12107,9,0.074
+hospice,dates,Unparseable claim from/thru date,12107,0,0.0
+inpatient,dates,Claim thru date before from date,58066,0,0.0
+inpatient,dates,Discharge date before admission date,58066,0,0.0
+inpatient,dates,Service date after beneficiary death date,58066,0,0.0
+inpatient,dates,Service date before beneficiary birth date,58066,0,0.0
+inpatient,dates,Service date outside data period (before 2015 or after Mar-2023),58066,0,0.0
+inpatient,dates,Unparseable claim from/thru date,58066,0,0.0
+outpatient,dates,Claim thru date before from date,575092,0,0.0
+outpatient,dates,Service date after beneficiary death date,575092,0,0.0
+outpatient,dates,Service date before beneficiary birth date,575092,0,0.0
+outpatient,dates,Service date outside data period (before 2015 or after Mar-2023),575092,0,0.0
+outpatient,dates,Unparseable claim from/thru date,575092,0,0.0
+pde,dates,Paid date before service date,515520,0,0.0
+pde,dates,Service date before beneficiary birth date,515520,0,0.0
+pde,dates,Unparseable service or paid date,515520,0,0.0
+snf,dates,Claim thru date before from date,12548,0,0.0
+snf,dates,Discharge date before admission date,12548,0,0.0
+snf,dates,Service date after beneficiary death date,12548,0,0.0
+snf,dates,Service date before beneficiary birth date,12548,0,0.0
+snf,dates,Service date outside data period (before 2015 or after Mar-2023),12548,0,0.0
+snf,dates,Unparseable claim from/thru date,12548,0,0.0
+beneficiary,duplicates,Duplicate BENE_ID + reference year,86917,0,0.0
+carrier,duplicates,CLM_ID reused by another claim type,90705,0,0.0
+carrier,duplicates,Duplicate claim-line keys (CLM_ID + line number),1121004,0,0.0
+dme,duplicates,CLM_ID reused by another claim type,37782,0,0.0
+dme,duplicates,Duplicate claim-line keys (CLM_ID + line number),103828,0,0.0
+hha,duplicates,CLM_ID reused by another claim type,493,0,0.0
+hha,duplicates,Duplicate claim-line keys (CLM_ID + line number),6215,0,0.0
+hospice,duplicates,CLM_ID reused by another claim type,1086,0,0.0
+hospice,duplicates,Duplicate claim-line keys (CLM_ID + line number),12107,0,0.0
+inpatient,duplicates,CLM_ID reused by another claim type,20867,0,0.0
+inpatient,duplicates,Duplicate claim-line keys (CLM_ID + line number),58066,0,0.0
+outpatient,duplicates,CLM_ID reused by another claim type,402653,0,0.0
+outpatient,duplicates,Duplicate claim-line keys (CLM_ID + line number),575092,0,0.0
+pde,duplicates,Duplicate PDE_ID,515520,0,0.0
+snf,duplicates,CLM_ID reused by another claim type,1632,0,0.0
+snf,duplicates,Duplicate claim-line keys (CLM_ID + line number),12548,0,0.0
+beneficiary,nulls,Null BENE_ID or birth date,86917,0,0.0
+beneficiary,nulls,Null death date (no deaths recorded),86917,86917,100.0
+carrier,nulls,"Null BENE_ID, CLM_ID or claim from date",1121004,0,0.0
+dme,nulls,"Null BENE_ID, CLM_ID or claim from date",103828,0,0.0
+hha,nulls,"Null BENE_ID, CLM_ID or claim from date",6215,0,0.0
+hospice,nulls,"Null BENE_ID, CLM_ID or claim from date",12107,0,0.0
+inpatient,nulls,"Null BENE_ID, CLM_ID or claim from date",58066,0,0.0
+outpatient,nulls,"Null BENE_ID, CLM_ID or claim from date",575092,0,0.0
+pde,nulls,"Null PDE_ID, BENE_ID or service date",515520,0,0.0
+snf,nulls,"Null BENE_ID, CLM_ID or claim from date",12548,0,0.0
+carrier,referential,BENE_ID missing from every beneficiary file,1121004,0,0.0
+carrier,referential,No beneficiary record for the service year,1121004,0,0.0
+dme,referential,BENE_ID missing from every beneficiary file,103828,0,0.0
+dme,referential,No beneficiary record for the service year,103828,0,0.0
+hha,referential,BENE_ID missing from every beneficiary file,6215,0,0.0
+hha,referential,No beneficiary record for the service year,6215,0,0.0
+hospice,referential,BENE_ID missing from every beneficiary file,12107,0,0.0
+hospice,referential,No beneficiary record for the service year,12107,9,0.074
+inpatient,referential,BENE_ID missing from every beneficiary file,58066,0,0.0
+inpatient,referential,No beneficiary record for the service year,58066,0,0.0
+outpatient,referential,BENE_ID missing from every beneficiary file,575092,0,0.0
+outpatient,referential,No beneficiary record for the service year,575092,0,0.0
+pde,referential,No beneficiary record for the service year,515520,0,0.0
+snf,referential,BENE_ID missing from every beneficiary file,12548,0,0.0
+snf,referential,No beneficiary record for the service year,12548,0,0.0

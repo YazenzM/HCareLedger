@@ -1,0 +1,26 @@
+cost_rank,diagnosis_code,diagnosis_description,match_type,category_description,paid_amount,pct_of_medical_paid,claim_count,members,paid_per_claim
+1,N184,"Chronic kidney disease, stage 4 (severe)",exact,Chronic kidney disease (CKD),217438868.91,21.98,224211,989,969.8
+2,Z3480,"Encounter for supervision of other normal pregnancy, unspecified trimester",exact,Encounter for supervision of normal pregnancy,70068971.23,7.08,5026,525,13941.3
+3,Z3400,"Encounter for supervision of normal first pregnancy, unspecified trimester",exact,Encounter for supervision of normal pregnancy,69645571.27,7.04,4942,533,14092.59
+4,Z733,"Stress, not elsewhere classified",exact,Problems related to life management difficulty,62062605.03,6.27,47121,5164,1317.09
+5,C50919,Malignant neoplasm of unspecified site of unspecified female breast,exact,Malignant neoplasm of breast,43023327.76,4.35,7791,409,5522.18
+6,C50929,Malignant neoplasm of unspecified site of unspecified male breast,exact,Malignant neoplasm of breast,41924894.70,4.24,7800,412,5374.99
+7,Z608,Other problems related to social environment,exact,Problems related to social environment,33670002.40,3.4,27453,3553,1226.46
+8,E785,"Hyperlipidemia, unspecified",exact,Disorders of lipoprotein metabolism and other lipidemias,29624281.41,2.99,24086,1813,1229.94
+9,R931,Abnormal findings on diagnostic imaging of heart and coronary circulation,exact,Abnormal findings on diagnostic imaging of other body structures,19894141.97,2.01,2887,674,6890.94
+10,J209,"Acute bronchitis, unspecified",exact,Acute bronchitis,19554218.85,1.98,8468,2281,2309.19
+11,C3490,Malignant neoplasm of unspecified part of unspecified bronchus or lung,exact,Malignant neoplasm of bronchus and lung,19381655.30,1.96,283,23,68486.41
+12,T50901A,"Poisoning by unspecified drugs, medicaments and biological substances, accidental (unintentional), initial encounter",exact,"Poisoning by, adverse effect of and underdosing of diuretics and other and unspecified drugs, medicaments and biological substances",18280360.16,1.85,19739,671,926.1
+13,I259,"Chronic ischemic heart disease, unspecified",exact,Chronic ischemic heart disease,16253093.60,1.64,5335,859,3046.5
+14,T7432X,"Child psychological abuse, confirmed",prefix,"Adult and child abuse, neglect and other maltreatment, confirmed",13644436.13,1.38,11853,2199,1151.14
+15,J329,"Chronic sinusitis, unspecified",exact,Chronic sinusitis,12805862.60,1.29,6775,1739,1890.16
+16,Z604,Social exclusion and rejection,exact,Problems related to social environment,12320501.47,1.25,10173,2105,1211.1
+17,J45909,"Unspecified asthma, uncomplicated",exact,Asthma,11624173.50,1.18,4787,435,2428.28
+18,J0190,"Acute sinusitis, unspecified",exact,Acute sinusitis,11075023.45,1.12,6289,1585,1761.02
+19,Z951,Presence of aortocoronary bypass graft,exact,Presence of cardiac and vascular implants and grafts,9567338.86,0.97,1108,426,8634.78
+20,N186,End stage renal disease,exact,Chronic kidney disease (CKD),9275519.50,0.94,9665,100,959.7
+21,K635,Polyp of colon,exact,Other diseases of intestine,9199971.46,0.93,1704,392,5399.04
+22,B9789,Other viral agents as the cause of diseases classified elsewhere,exact,Viral agents as the cause of diseases classified elsewhere,8122725.72,0.82,4382,1345,1853.66
+23,B349,"Viral infection, unspecified",exact,Viral infection of unspecified site,7959866.09,0.8,3966,1308,2007.03
+24,B002,Herpesviral gingivostomatitis and pharyngotonsillitis,exact,Herpesviral [herpes simplex] infections,7607584.15,0.77,3362,1251,2262.82
+25,C189,"Malignant neoplasm of colon, unspecified",exact,Malignant neoplasm of colon,7097884.11,0.72,836,156,8490.29

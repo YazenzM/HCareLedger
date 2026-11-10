@@ -1,0 +1,12 @@
+segment_type,segment,index_stays,readmission_rate_pct,unplanned_readmission_rate_pct
+Age band,65-69,2617,20.83,18.46
+Age band,70-74,2441,26.18,24.83
+Age band,75-79,2271,39.23,37.78
+Age band,80-84,1505,54.29,53.02
+Age band,85+,3394,63.67,63.2
+Age band,Under 65,7304,13.29,11.71
+Dual status,Dual eligible,5366,24.69,23.41
+Dual status,Medicare only,14166,33.17,31.69
+Index admission type,Elective,3104,8.47,2.19
+Index admission type,Emergency,16114,35.71,35.2
+Index admission type,Urgent,314,2.23,1.59

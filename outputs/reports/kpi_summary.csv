@@ -1,0 +1,12 @@
+sort_order,metric,period,value,unit
+1,Medical member months,Mar-2015 to Feb-2023,663112.0,member months
+2,Medical PMPM (Medicare paid),Mar-2015 to Feb-2023,1491.8,USD
+3,Medical PMPM (Medicare paid),2022,1665.29,USD
+4,Part D plan paid PMPM,Mar-2015 to Feb-2023,133.59,USD
+5,Part D plan paid per member per year,2022,1724.72,USD
+6,"Inpatient admissions per 1,000",2022,379.8,"per 1,000 members"
+7,30-day all-cause readmission rate,All years,30.84,%
+8,30-day unplanned readmission rate,All years,29.41,%
+9,Share of spend from top 5% of members,2022,45.38,%
+10,Error-severity data tests passing,Build,100.0,%
+11,Warning tests (quantified data conditions),Build,6.0,tests
