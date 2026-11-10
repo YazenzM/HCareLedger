@@ -1,0 +1,102 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cost_table_trend",
+  "position": {
+    "x": 835,
+    "y": 470,
+    "z": 0,
+    "width": 425,
+    "height": 235,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "year"
+                }
+              },
+              "queryRef": "dim_date.year",
+              "nativeQueryRef": "year"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Medical PMPM"
+                }
+              },
+              "queryRef": "_Measures.Medical PMPM",
+              "nativeQueryRef": "Medical PMPM"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Medical PMPM YoY %"
+                }
+              },
+              "queryRef": "_Measures.Medical PMPM YoY %",
+              "nativeQueryRef": "Medical PMPM YoY %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Top 5% Share of Spend"
+                }
+              },
+              "queryRef": "_Measures.Top 5% Share of Spend",
+              "nativeQueryRef": "Top 5% Share of Spend"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Trend and cost concentration'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

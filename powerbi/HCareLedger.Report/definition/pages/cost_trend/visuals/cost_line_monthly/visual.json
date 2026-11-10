@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cost_line_monthly",
+  "position": {
+    "x": 20,
+    "y": 215,
+    "z": 0,
+    "width": 800,
+    "height": 240,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "month_start"
+                }
+              },
+              "queryRef": "dim_date.month_start",
+              "nativeQueryRef": "month_start"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Medical PMPM"
+                }
+              },
+              "queryRef": "_Measures.Medical PMPM",
+              "nativeQueryRef": "Medical PMPM"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Medical PMPM (Rolling 12M)"
+                }
+              },
+              "queryRef": "_Measures.Medical PMPM (Rolling 12M)",
+              "nativeQueryRef": "Medical PMPM (Rolling 12M)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Medical PMPM by month, with rolling 12-month PMPM'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,194 @@
+/// One row per acute inpatient stay. Overlapping and same-day-transfer claims are merged. Carries 30-day readmission flags for index stays.
+table fct_inpatient_stay
+	lineageTag: c259cd92-0be0-5a6a-9720-9403d3d3cb8e
+
+	/// Surrogate primary key.
+	column stay_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: a5763466-7026-51dc-8a75-1732685a3fb6
+		summarizeBy: none
+		sourceColumn: stay_key
+
+	/// Beneficiary ID (degenerate).
+	column bene_id
+		dataType: string
+		isHidden
+		lineageTag: 9353fe14-bae3-50a5-8fe2-4f276f07bbfb
+		summarizeBy: none
+		sourceColumn: bene_id
+
+	/// Stay sequence number within the beneficiary.
+	column stay_seq
+		dataType: int64
+		formatString: 0
+		lineageTag: a6d92359-a43d-53e3-9a6d-14f08ab2a9ee
+		summarizeBy: none
+		sourceColumn: stay_seq
+
+	/// FK to dim_beneficiary_year for the admission year.
+	column bene_year_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 79a87a42-49fd-5a30-8717-5c92df0ab62b
+		summarizeBy: none
+		sourceColumn: bene_year_key
+
+	/// FK to dim_date: admission date.
+	column admission_date_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: b58a8de1-12ee-57d4-af86-f172fc1a6d0a
+		summarizeBy: none
+		sourceColumn: admission_date_key
+
+	/// FK to dim_date: discharge date.
+	column discharge_date_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 85bdd8cb-e798-5669-964f-7b293178090f
+		summarizeBy: none
+		sourceColumn: discharge_date_key
+
+	/// Discharge date minus admission date, in days (0 = same-day).
+	column length_of_stay
+		dataType: int64
+		formatString: #,0
+		lineageTag: 63d1f853-e06d-5685-a5a9-fec3f2fb2db9
+		summarizeBy: none
+		sourceColumn: length_of_stay
+
+	/// Inpatient claims merged into the stay.
+	column claim_count
+		dataType: int64
+		formatString: #,0
+		lineageTag: ab2eb417-ea84-5ed0-a522-e5b6ada1c0e2
+		summarizeBy: none
+		sourceColumn: claim_count
+
+	/// Sum of claim header payments for the stay.
+	column paid_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: a0857a0c-35c3-5437-b2bb-becfc63e1ab3
+		summarizeBy: none
+		sourceColumn: paid_amount
+
+	/// CLM_ID of the first claim in the stay.
+	column first_claim_id
+		dataType: string
+		lineageTag: 11efcbd2-9cd3-54dd-bd2d-abc4f0f399eb
+		summarizeBy: none
+		sourceColumn: first_claim_id
+
+	/// FK to dim_diagnosis: principal diagnosis of the first claim.
+	column principal_diagnosis_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 7f4c74a8-3e9c-5fa4-a606-5a24f5978562
+		summarizeBy: none
+		sourceColumn: principal_diagnosis_key
+
+	/// FK to dim_provider: admitting facility CCN.
+	column facility_provider_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f1405078-ec4b-5aa8-8eec-5378df33ff6a
+		summarizeBy: none
+		sourceColumn: facility_provider_key
+
+	/// MS-DRG on the first claim of the stay.
+	column drg_code
+		dataType: string
+		lineageTag: 5007aea4-9278-5e3c-92da-db82bbb3b8ce
+		summarizeBy: none
+		sourceColumn: drg_code
+
+	/// CLM_IP_ADMSN_TYPE_CD: 1 emergency, 2 urgent, 3 elective, 4 newborn, 5 trauma.
+	column admission_type_code
+		dataType: string
+		lineageTag: d6603f0c-2c08-55f7-94ec-e24b42570d53
+		summarizeBy: none
+		sourceColumn: admission_type_code
+
+	/// Emergency, Urgent, Elective, Newborn, Trauma. Elective readmissions are treated as planned.
+	column admission_type
+		dataType: string
+		lineageTag: f2e8ffe4-f27e-5cb4-a198-fe0faf3ce945
+		summarizeBy: none
+		sourceColumn: admission_type
+
+	/// Patient discharge status (01 = home; all synthetic stays are 01).
+	column discharge_status_code
+		dataType: string
+		lineageTag: 409d117f-aacf-5808-a82b-9e435fedfd92
+		summarizeBy: none
+		sourceColumn: discharge_status_code
+
+	/// Member had Part A + B in the admission month; admissions per 1,000 count only these.
+	column is_medical_eligible_month
+		dataType: boolean
+		lineageTag: b6a1e4f1-0463-5d3a-902d-bf386804e9a2
+		summarizeBy: none
+		sourceColumn: is_medical_eligible_month
+
+	/// Admission date in Mar-2015 .. Feb-2023.
+	column is_admission_in_window
+		dataType: boolean
+		lineageTag: a625be50-e787-5937-88de-ccf4db6ed009
+		summarizeBy: none
+		sourceColumn: is_admission_in_window
+
+	/// Counts in the readmission denominator: discharged alive, not transferred or AMA, discharged at least 30 days before the window ends.
+	column is_index_eligible
+		dataType: boolean
+		lineageTag: 7d988939-81b4-5a84-88e7-efe9c115f453
+		summarizeBy: none
+		sourceColumn: is_index_eligible
+
+	/// Any stay admitted 1-30 days after this discharge.
+	column has_readmission_30d
+		dataType: boolean
+		lineageTag: 48705151-bf0e-5f1e-9c5e-e54c4719eeed
+		summarizeBy: none
+		sourceColumn: has_readmission_30d
+
+	/// A non-elective stay admitted 1-30 days after this discharge.
+	column has_unplanned_readmission_30d
+		dataType: boolean
+		lineageTag: 37034da7-df2b-5ace-a524-40826f7ae9ef
+		summarizeBy: none
+		sourceColumn: has_unplanned_readmission_30d
+
+	/// Days from discharge to the next admission within 30 days.
+	column days_to_readmission
+		dataType: int64
+		formatString: #,0
+		lineageTag: b6e76577-58e5-5241-9378-1570e484a28a
+		summarizeBy: none
+		sourceColumn: days_to_readmission
+
+	/// Days from discharge to the next non-elective admission within 30 days.
+	column days_to_unplanned_readmission
+		dataType: int64
+		formatString: #,0
+		lineageTag: 11c1d1dd-6432-54ad-a52b-89952e93bb58
+		summarizeBy: none
+		sourceColumn: days_to_unplanned_readmission
+
+	partition fct_inpatient_stay = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\fct_inpatient_stay.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"stay_key", Int64.Type}, {"bene_id", type text}, {"stay_seq", Int64.Type}, {"bene_year_key", Int64.Type}, {"admission_date_key", Int64.Type}, {"discharge_date_key", Int64.Type}, {"length_of_stay", Int64.Type}, {"claim_count", Int64.Type}, {"paid_amount", Currency.Type}, {"first_claim_id", type text}, {"principal_diagnosis_key", Int64.Type}, {"facility_provider_key", Int64.Type}, {"drg_code", type text}, {"admission_type_code", type text}, {"admission_type", type text}, {"discharge_status_code", type text}, {"is_medical_eligible_month", type logical}, {"is_admission_in_window", type logical}, {"is_index_eligible", type logical}, {"has_readmission_30d", type logical}, {"has_unplanned_readmission_30d", type logical}, {"days_to_readmission", Int64.Type}, {"days_to_unplanned_readmission", Int64.Type}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

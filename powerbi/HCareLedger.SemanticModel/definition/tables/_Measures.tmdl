@@ -1,0 +1,303 @@
+/// Home table for all DAX measures. Placeholder column is hidden.
+table _Measures
+	lineageTag: 25a878c3-16a2-56c3-9409-d6bdd2d28fed
+
+	/// Medicare paid on claim lines incurred in medical member months (Part A + B, no HMO), Mar-2015 to Feb-2023.
+	measure 'Medical Paid' =
+			CALCULATE(
+			    SUM(fct_claim_line[paid_amount]),
+			    fct_claim_line[is_in_reporting_window] = TRUE(),
+			    fct_claim_line[is_medical_eligible_month] = TRUE()
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 1. Cost
+		lineageTag: f24f44a7-674d-50c9-a6cd-3bcd7e2fb68b
+
+	/// Months with Part A + Part B and no HMO, in the reporting window. Medical PMPM denominator.
+	measure 'Medical Member Months' =
+			CALCULATE(
+			    SUM(fct_member_month[medical_member_month]),
+			    fct_member_month[is_in_reporting_window] = TRUE()
+			)
+		formatString: #,0
+		displayFolder: 1. Cost
+		lineageTag: ae9f4c6f-3d80-5525-82f8-0983dccc4db6
+
+	/// Medical paid per medical member month.
+	measure 'Medical PMPM' =
+			DIVIDE([Medical Paid], [Medical Member Months])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 1. Cost
+		lineageTag: cf9991e7-4866-54c9-89e8-b4d78b1fdfe3
+
+	/// Medical PMPM for the same period one year earlier.
+	measure 'Medical PMPM PY' =
+			CALCULATE([Medical PMPM], SAMEPERIODLASTYEAR(dim_date[date]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 1. Cost
+		lineageTag: 833f0f11-3efd-5b77-b679-8898e76240d1
+
+	/// Change in medical PMPM versus the same period one year earlier.
+	measure 'Medical PMPM YoY %' =
+			DIVIDE([Medical PMPM] - [Medical PMPM PY], [Medical PMPM PY])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 1. Cost
+		lineageTag: 293bae1c-db0e-5432-897c-5f567653fc66
+
+	/// Medical PMPM over the 12 months ending at the latest date in context.
+	measure 'Medical PMPM (Rolling 12M)' =
+			VAR LastDate = MAX(dim_date[date])
+			RETURN
+			    CALCULATE([Medical PMPM], DATESINPERIOD(dim_date[date], LastDate, -12, MONTH))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 1. Cost
+		lineageTag: 91409727-bbd5-57bf-b16a-80645d6f64d5
+
+	/// Part D plan paid (covered + non-covered) on fills in Part D member months, Mar-2015 to Feb-2023.
+	measure 'Part D Plan Paid' =
+			CALCULATE(
+			    SUM(fct_drug_event[plan_paid_amount]),
+			    fct_drug_event[is_in_reporting_window] = TRUE(),
+			    fct_drug_event[is_rx_eligible_month] = TRUE()
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 1. Cost
+		lineageTag: 1ff1ead9-950e-5e3d-9d9e-abd3e7695fa1
+
+	/// Months enrolled in Part D, in the reporting window. Part D PMPM denominator.
+	measure 'Part D Member Months' =
+			CALCULATE(
+			    SUM(fct_member_month[rx_member_month]),
+			    fct_member_month[is_in_reporting_window] = TRUE()
+			)
+		formatString: #,0
+		displayFolder: 1. Cost
+		lineageTag: 54534c1c-fc45-54f1-8f56-bce8f4030d03
+
+	/// Part D plan paid per Part D member month.
+	measure 'Part D PMPM' =
+			DIVIDE([Part D Plan Paid], [Part D Member Months])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 1. Cost
+		lineageTag: 5e00a3fe-aee7-5a47-963b-67eef3cae1c4
+
+	/// Part D plan paid per average enrolled member per year (member months / 12).
+	measure 'Part D Plan Paid PMPY' =
+			DIVIDE([Part D Plan Paid], DIVIDE([Part D Member Months], 12))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 1. Cost
+		lineageTag: 1300da08-54e9-5ef4-a7ea-6d36afab2956
+
+	/// PMPM that follows the service type in context: Part D PMPM for Part D, medical PMPM otherwise (including totals).
+	measure PMPM =
+			IF(
+			    SELECTEDVALUE(dim_service_type[benefit]) = "Part D",
+			    [Part D PMPM],
+			    [Medical PMPM]
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 1. Cost
+		lineageTag: cb273947-551f-5472-a9f4-01ee203d3f3f
+
+	/// Medical paid plus Part D plan paid.
+	measure 'Total Spend' =
+			[Medical Paid] + [Part D Plan Paid]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 1. Cost
+		lineageTag: c2705029-39f2-5dc5-83b4-3e7acd444f46
+
+	/// Share of total spend (medical + Part D) from the costliest 5% of members with at least one medical member month in context. Zero-spend members count in the population.
+	measure 'Top 5% Share of Spend' =
+			VAR MemberSpend =
+			    ADDCOLUMNS(
+			        FILTER(VALUES(dim_beneficiary_year[bene_id]), [Medical Member Months] > 0),
+			        "@Spend", [Medical Paid] + [Part D Plan Paid]
+			    )
+			VAR MemberCount = COUNTROWS(MemberSpend)
+			VAR TopCount = ROUNDUP(MemberCount * 0.05, 0)
+			VAR TopSpend = SUMX(TOPN(TopCount, MemberSpend, [@Spend], DESC), [@Spend])
+			RETURN
+			    DIVIDE(TopSpend, SUMX(MemberSpend, [@Spend]))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 1. Cost
+		lineageTag: 576e2d69-9e28-51a1-bb25-abe1ec6da35b
+
+	/// Acute inpatient stays admitted in the window during a medical member month (overlapping and transfer claims merged).
+	measure Admissions =
+			CALCULATE(
+			    COUNTROWS(fct_inpatient_stay),
+			    fct_inpatient_stay[is_admission_in_window] = TRUE(),
+			    fct_inpatient_stay[is_medical_eligible_month] = TRUE()
+			)
+		formatString: #,0
+		displayFolder: 2. Utilization
+		lineageTag: 1349ac0b-b109-549e-af68-42b32b03a8ae
+
+	/// Admissions per 1,000 members per year = admissions / medical member months x 12,000.
+	measure 'Admits per 1,000' =
+			DIVIDE([Admissions] * 12000, [Medical Member Months])
+		formatString: #,0.0
+		displayFolder: 2. Utilization
+		lineageTag: 05081fb5-b919-53ef-a581-3f667a07a6fe
+
+	/// Inpatient days for admissions in context; same-day stays count as 1 day.
+	measure 'Inpatient Days' =
+			CALCULATE(
+			    SUMX(fct_inpatient_stay, MAX(fct_inpatient_stay[length_of_stay], 1)),
+			    fct_inpatient_stay[is_admission_in_window] = TRUE(),
+			    fct_inpatient_stay[is_medical_eligible_month] = TRUE()
+			)
+		formatString: #,0
+		displayFolder: 2. Utilization
+		lineageTag: 3aeadb6e-9a40-54ca-add3-5b46b7b47586
+
+	/// Inpatient days per 1,000 members per year.
+	measure 'Days per 1,000' =
+			DIVIDE([Inpatient Days] * 12000, [Medical Member Months])
+		formatString: #,0.0
+		displayFolder: 2. Utilization
+		lineageTag: 71c8b24a-84aa-5dcf-adb5-d943041cef6f
+
+	/// Inpatient days per admission.
+	measure 'Average Length of Stay' =
+			DIVIDE([Inpatient Days], [Admissions])
+		formatString: 0.00
+		displayFolder: 2. Utilization
+		lineageTag: d2db6272-3032-5abd-9878-22f0ce6886b2
+
+	/// Medicare paid per acute inpatient stay.
+	measure 'Paid per Admission' =
+			DIVIDE(
+			    CALCULATE(SUM(fct_inpatient_stay[paid_amount]), fct_inpatient_stay[is_admission_in_window] = TRUE(), fct_inpatient_stay[is_medical_eligible_month] = TRUE()),
+			    [Admissions]
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: 2. Utilization
+		lineageTag: 686cc1f0-9d5e-5ce1-ae3e-ce69e46e3a06
+
+	/// Outpatient facility claims incurred in medical member months.
+	measure 'Outpatient Visits' =
+			CALCULATE(
+			    COUNTROWS(fct_claim_line),
+			    fct_claim_line[is_header_line] = TRUE(),
+			    fct_claim_line[is_in_reporting_window] = TRUE(),
+			    fct_claim_line[is_medical_eligible_month] = TRUE(),
+			    dim_service_type[claim_type] = "outpatient"
+			)
+		formatString: #,0
+		displayFolder: 2. Utilization
+		lineageTag: 4d94d259-443f-5f33-9706-73d9c6e77893
+
+	/// Outpatient visits per 1,000 members per year.
+	measure 'Outpatient Visits per 1,000' =
+			DIVIDE([Outpatient Visits] * 12000, [Medical Member Months])
+		formatString: #,0.0
+		displayFolder: 2. Utilization
+		lineageTag: 357574f6-81e8-57d0-98ee-1fee70402c6d
+
+	/// Professional (carrier) claims incurred in medical member months.
+	measure 'Professional Claims' =
+			CALCULATE(
+			    COUNTROWS(fct_claim_line),
+			    fct_claim_line[is_header_line] = TRUE(),
+			    fct_claim_line[is_in_reporting_window] = TRUE(),
+			    fct_claim_line[is_medical_eligible_month] = TRUE(),
+			    dim_service_type[claim_type] = "carrier"
+			)
+		formatString: #,0
+		displayFolder: 2. Utilization
+		lineageTag: a18241e9-7387-52d5-91cb-af5783881df1
+
+	/// Professional claims per 1,000 members per year.
+	measure 'Professional Claims per 1,000' =
+			DIVIDE([Professional Claims] * 12000, [Medical Member Months])
+		formatString: #,0.0
+		displayFolder: 2. Utilization
+		lineageTag: c5b15bd5-c575-5d4f-92f1-fc381b0f213e
+
+	/// Rank of a diagnosis category by medical paid among the categories in context.
+	measure 'Diagnosis Cost Rank' =
+			IF(
+			    ISINSCOPE(dim_diagnosis[category_description]),
+			    RANKX(ALLSELECTED(dim_diagnosis[category_description]), [Medical Paid], , DESC)
+			)
+		formatString: 0
+		displayFolder: 2. Utilization
+		lineageTag: b2790397-6c9e-5458-bc0d-b2b9d6f3266b
+
+	/// Medical paid for the 10 costliest diagnosis categories; blank for the rest, so visuals show only the top 10.
+	measure 'Medical Paid (Top 10 Dx)' =
+			IF([Diagnosis Cost Rank] <= 10, [Medical Paid])
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 2. Utilization
+		lineageTag: b4da4d3f-81f1-5821-ae65-ea698fa41e71
+
+	/// Share of medical paid across the diagnoses in context.
+	measure '% of Medical Paid' =
+			DIVIDE([Medical Paid], CALCULATE([Medical Paid], ALLSELECTED(dim_diagnosis)))
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 2. Utilization
+		lineageTag: fbb262c9-8ff9-521a-8e5e-271153477892
+
+	/// Stays eligible as readmission index stays, dated by discharge: discharged alive, not transferred or AMA, with a full 30-day follow-up in the window.
+	measure 'Index Stays' =
+			CALCULATE(
+			    COUNTROWS(fct_inpatient_stay),
+			    fct_inpatient_stay[is_index_eligible] = TRUE(),
+			    USERELATIONSHIP(fct_inpatient_stay[discharge_date_key], dim_date[date_key])
+			)
+		formatString: #,0
+		displayFolder: 3. Readmissions
+		lineageTag: 4c0b01db-2455-515b-b2da-1e97c6951cda
+
+	/// Index stays followed by any admission 1-30 days after discharge.
+	measure 'Readmissions (30-day)' =
+			CALCULATE([Index Stays], fct_inpatient_stay[has_readmission_30d] = TRUE())
+		formatString: #,0
+		displayFolder: 3. Readmissions
+		lineageTag: 2ca8dc49-96d4-5505-9839-b720545f721b
+
+	/// 30-day all-cause readmission rate.
+	measure 'Readmission Rate' =
+			DIVIDE([Readmissions (30-day)], [Index Stays])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 3. Readmissions
+		lineageTag: 9d302f61-71d7-5dd7-8563-a2cf48341b04
+
+	/// Index stays followed by a non-elective admission 1-30 days after discharge (elective = planned proxy).
+	measure 'Unplanned Readmissions (30-day)' =
+			CALCULATE([Index Stays], fct_inpatient_stay[has_unplanned_readmission_30d] = TRUE())
+		formatString: #,0
+		displayFolder: 3. Readmissions
+		lineageTag: df66bfca-6a33-5858-a8e1-37af4c605dde
+
+	/// 30-day unplanned readmission rate.
+	measure 'Unplanned Readmission Rate' =
+			DIVIDE([Unplanned Readmissions (30-day)], [Index Stays])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 3. Readmissions
+		lineageTag: 2651a16d-b9f0-5435-b973-0697eca1994f
+
+	/// Average days from index discharge to the next admission, for readmitted index stays.
+	measure 'Avg Days to Readmission' =
+			CALCULATE(
+			    AVERAGE(fct_inpatient_stay[days_to_readmission]),
+			    fct_inpatient_stay[is_index_eligible] = TRUE(),
+			    USERELATIONSHIP(fct_inpatient_stay[discharge_date_key], dim_date[date_key])
+			)
+		formatString: 0.0
+		displayFolder: 3. Readmissions
+		lineageTag: efe05cb0-5ebc-5cf2-8a80-9f1f845b260c
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: 9ed3c5b1-5e2c-5ba6-9237-ccee807a8a4b
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+	partition _Measures = m
+		mode: import
+		source = #table(type table [Placeholder = text], {})
+
+	annotation PBI_ResultType = Table

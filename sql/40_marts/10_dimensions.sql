@@ -94,6 +94,12 @@ select
          when b.age_at_end_of_year < 80 then '75-79'
          when b.age_at_end_of_year < 85 then '80-84'
          else '85+' end                                           as age_band,
+    case when b.age_at_end_of_year < 65 then 1
+         when b.age_at_end_of_year < 70 then 2
+         when b.age_at_end_of_year < 75 then 3
+         when b.age_at_end_of_year < 80 then 4
+         when b.age_at_end_of_year < 85 then 5
+         else 6 end                                               as age_band_order,
     b.sex_code,
     case b.sex_code when '1' then 'Male' when '2' then 'Female' else 'Unknown' end as sex,
     b.race_code,
@@ -107,13 +113,14 @@ select
     b.esrd_flag,
     m.part_a_months, m.part_b_months, m.part_d_months, m.dual_months,
     m.dual_months > 0                                             as is_dual_any_month,
+    case when m.dual_months > 0 then 'Dual eligible' else 'Medicare only' end as dual_status,
     m.medical_member_months,
     m.rx_member_months
 from stg.beneficiary_year b
 join months m using (bene_id, year)
 union all
-select -1, 'UNKNOWN', null, null, null, null, 'Unknown', null, 'Unknown', null, 'Unknown', null, null, null, 'Unknown',
-       null, 0, 0, 0, 0, false, 0, 0;
+select -1, 'UNKNOWN', null, null, null, null, 'Unknown', 7, null, 'Unknown', null, 'Unknown', null, null, null, 'Unknown',
+       null, 0, 0, 0, 0, false, 'Unknown', 0, 0;
 
 comment on table mart.dim_beneficiary_year is 'Beneficiary-year dimension: demographics and enrollment summary for one beneficiary in one calendar year. Key -1 = unknown.';
 comment on column mart.dim_beneficiary_year.bene_year_key is 'Surrogate primary key.';
@@ -126,6 +133,8 @@ comment on column mart.dim_beneficiary_year.race_code is 'BENE_RACE_CD: 0-6.';
 comment on column mart.dim_beneficiary_year.county_code is 'SSA county code of residence.';
 comment on column mart.dim_beneficiary_year.orig_entitlement_reason_code is 'ENTLMT_RSN_ORIG: 0 = old age, 1 = disability, 2 = ESRD, 3 = disability and ESRD.';
 comment on column mart.dim_beneficiary_year.is_dual_any_month is 'Dually eligible for Medicaid in at least one month of the year.';
+comment on column mart.dim_beneficiary_year.dual_status is 'Dual eligible / Medicare only (label of is_dual_any_month).';
+comment on column mart.dim_beneficiary_year.age_band_order is 'Sort order for age_band (1 = Under 65 ... 6 = 85+).';
 comment on column mart.dim_beneficiary_year.age_at_end_of_year is 'Age on 31 December of the year (AGE_AT_END_REF_YR).';
 comment on column mart.dim_beneficiary_year.age_band is 'Age band: Under 65, 65-69, 70-74, 75-79, 80-84, 85+.';
 comment on column mart.dim_beneficiary_year.sex is 'Male / Female from SEX_IDENT_CD.';

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cost_card_paid",
+  "position": {
+    "x": 644,
+    "y": 90,
+    "z": 0,
+    "width": 297,
+    "height": 110,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Medical Paid"
+                }
+              },
+              "queryRef": "_Measures.Medical Paid",
+              "nativeQueryRef": "Medical Paid"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Medical paid'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

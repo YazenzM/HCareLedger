@@ -143,7 +143,7 @@ select 'Age band' as segment_type, b.age_band as segment, count(*) as index_stay
 from mart.fct_inpatient_stay s join mart.dim_beneficiary_year b using (bene_year_key)
 where s.is_index_eligible group by all
 union all
-select 'Dual status', case when b.is_dual_any_month then 'Dual eligible' else 'Medicare only' end, count(*),
+select 'Dual status', b.dual_status, count(*),
        round(100.0 * avg(s.has_readmission_30d::integer), 2), round(100.0 * avg(s.has_unplanned_readmission_30d::integer), 2)
 from mart.fct_inpatient_stay s join mart.dim_beneficiary_year b using (bene_year_key)
 where s.is_index_eligible group by all

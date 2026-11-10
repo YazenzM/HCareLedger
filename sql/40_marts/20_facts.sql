@@ -200,11 +200,11 @@ grouped as (
     from ordered
 ),
 stays as (
-    select bene_id, stay_seq,
+    select bene_id, stay_seq::integer as stay_seq,
            min(admission_date)                         as admission_date,
            max(discharge_date)                         as discharge_date,
            count(*)                                    as claim_count,
-           sum(paid_amount)                            as paid_amount,
+           sum(paid_amount)::decimal(18, 2)            as paid_amount,
            arg_min(claim_id, admission_date)           as first_claim_id,
            arg_min(principal_dx_code, admission_date)  as principal_dx_code,
            arg_min(admission_type_code, admission_date) as admission_type_code,

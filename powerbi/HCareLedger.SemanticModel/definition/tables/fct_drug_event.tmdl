@@ -1,0 +1,215 @@
+/// One row per Part D prescription drug event (fill).
+table fct_drug_event
+	lineageTag: cae930e7-b172-57bc-a40d-ba8c8bca59af
+
+	/// Surrogate primary key.
+	column drug_event_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: fb0e55bc-c285-5b8f-a4d3-89aa1c8d7d9a
+		summarizeBy: none
+		sourceColumn: drug_event_key
+
+	/// CMS PDE ID, degenerate dimension.
+	column pde_id
+		dataType: string
+		lineageTag: 56dcb340-c942-5b06-b7d9-5f9818b60978
+		summarizeBy: none
+		sourceColumn: pde_id
+
+	/// FK to dim_service_type (always Part D).
+	column service_type_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9ed450ce-4fb5-51ea-b0c7-55c5f931719d
+		summarizeBy: none
+		sourceColumn: service_type_key
+
+	/// FK to dim_beneficiary_year for the service year.
+	column bene_year_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 027f30fe-a85f-539d-9318-f8656e157852
+		summarizeBy: none
+		sourceColumn: bene_year_key
+
+	/// Beneficiary ID (degenerate).
+	column bene_id
+		dataType: string
+		isHidden
+		lineageTag: 3e7ff172-d73a-5b94-b755-e2ca49c20835
+		summarizeBy: none
+		sourceColumn: bene_id
+
+	/// FK to dim_date: date of fill.
+	column service_date_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 7936c980-1b8e-5cec-92f3-d8bea8cba1db
+		summarizeBy: none
+		sourceColumn: service_date_key
+
+	/// FK to dim_date: date the plan paid.
+	column paid_date_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9072b8d3-e4c6-5ad0-bf81-b41de9ca2b7e
+		summarizeBy: none
+		sourceColumn: paid_date_key
+
+	/// FK to dim_date: first day of the fill month.
+	column incurred_month_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 8b2a4238-0f87-5baf-865f-3a43dafff08f
+		summarizeBy: none
+		sourceColumn: incurred_month_key
+
+	/// FK to dim_provider: prescriber NPI.
+	column prescriber_provider_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: c0917759-5a39-5e54-aa7c-f088f208bd16
+		summarizeBy: none
+		sourceColumn: prescriber_provider_key
+
+	/// 11-digit National Drug Code (PROD_SRVC_ID).
+	column ndc
+		dataType: string
+		lineageTag: 795c5e16-4be5-5a8d-8a42-ca0a2acbf834
+		summarizeBy: none
+		sourceColumn: ndc
+
+	/// BRND_GNRC_CD: B = brand, G = generic.
+	column brand_generic_code
+		dataType: string
+		lineageTag: 9ef45a5f-d7a8-5857-bf6f-fcc5ece0ab64
+		summarizeBy: none
+		sourceColumn: brand_generic_code
+
+	/// Brand or Generic.
+	column brand_generic
+		dataType: string
+		lineageTag: 9bd33086-e68f-5103-a618-9aec76e0ef67
+		summarizeBy: none
+		sourceColumn: brand_generic
+
+	/// Quantity dispensed.
+	column quantity_dispensed
+		dataType: double
+		formatString: #,0.00
+		lineageTag: ae58dad9-00dd-5b70-a43f-f0c89f2cf03a
+		summarizeBy: none
+		sourceColumn: quantity_dispensed
+
+	/// Days supply.
+	column days_supply
+		dataType: int64
+		formatString: #,0
+		lineageTag: 62348da4-9fc4-50a9-a98b-441ed8cd91ff
+		summarizeBy: none
+		sourceColumn: days_supply
+
+	/// Fill number (0 = original fill).
+	column fill_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 048005dc-71e0-51ba-b221-d5b9c7bf4c92
+		summarizeBy: none
+		sourceColumn: fill_number
+
+	/// Gross drug cost (TOT_RX_CST_AMT) = patient pay + other TrOOP + LICS + PLRO + plan paid.
+	column total_drug_cost
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 6fb144b6-d982-5ea4-8c64-a070236bf442
+		summarizeBy: none
+		sourceColumn: total_drug_cost
+
+	/// Covered + non-covered plan paid amount. Part D PMPM numerator.
+	column plan_paid_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 90dce074-869f-54e9-8275-5541abd36800
+		summarizeBy: none
+		sourceColumn: plan_paid_amount
+
+	/// Plan paid for covered Part D drugs (CVRD_D_PLAN_PD_AMT).
+	column covered_plan_paid_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 9a24567f-8e03-5fcf-aaf8-55a6f6f76e80
+		summarizeBy: none
+		sourceColumn: covered_plan_paid_amount
+
+	/// Plan paid for supplemental, non-Part D drugs (NCVRD_PLAN_PD_AMT).
+	column noncovered_plan_paid_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 3485f563-163a-5609-ab9e-4c4f73080a25
+		summarizeBy: none
+		sourceColumn: noncovered_plan_paid_amount
+
+	/// Beneficiary cost sharing.
+	column patient_pay_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: c9beec98-5c89-5fd5-842a-bf3c494bed9c
+		summarizeBy: none
+		sourceColumn: patient_pay_amount
+
+	/// Low-income cost-sharing subsidy.
+	column lics_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 46a1c10a-b7b5-5a2d-8735-f5e253d050d2
+		summarizeBy: none
+		sourceColumn: lics_amount
+
+	/// Other payer amounts that count toward true out-of-pocket (OTHR_TROOP_AMT).
+	column other_troop_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: eac726eb-1bfe-5e94-b2f9-56e28e4389dc
+		summarizeBy: none
+		sourceColumn: other_troop_amount
+
+	/// Patient liability reduction due to other payer (PLRO_AMT).
+	column plro_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 3b048897-9348-5541-8493-140c14a77a2f
+		summarizeBy: none
+		sourceColumn: plro_amount
+
+	/// Member was enrolled in Part D in the fill month.
+	column is_rx_eligible_month
+		dataType: boolean
+		lineageTag: cbd2da27-290d-5208-b38d-52e3bdbe5715
+		summarizeBy: none
+		sourceColumn: is_rx_eligible_month
+
+	/// Fill date in Mar-2015 .. Feb-2023.
+	column is_in_reporting_window
+		dataType: boolean
+		lineageTag: 574cd37e-5569-5a78-85af-7b82727b78e8
+		summarizeBy: none
+		sourceColumn: is_in_reporting_window
+
+	partition fct_drug_event = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\fct_drug_event.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"drug_event_key", Int64.Type}, {"pde_id", type text}, {"service_type_key", Int64.Type}, {"bene_year_key", Int64.Type}, {"bene_id", type text}, {"service_date_key", Int64.Type}, {"paid_date_key", Int64.Type}, {"incurred_month_key", Int64.Type}, {"prescriber_provider_key", Int64.Type}, {"ndc", type text}, {"brand_generic_code", type text}, {"brand_generic", type text}, {"quantity_dispensed", type number}, {"days_supply", Int64.Type}, {"fill_number", Int64.Type}, {"total_drug_cost", Currency.Type}, {"plan_paid_amount", Currency.Type}, {"covered_plan_paid_amount", Currency.Type}, {"noncovered_plan_paid_amount", Currency.Type}, {"patient_pay_amount", Currency.Type}, {"lics_amount", Currency.Type}, {"other_troop_amount", Currency.Type}, {"plro_amount", Currency.Type}, {"is_rx_eligible_month", type logical}, {"is_in_reporting_window", type logical}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

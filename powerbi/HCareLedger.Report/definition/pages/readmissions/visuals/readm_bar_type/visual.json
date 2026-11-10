@@ -1,0 +1,78 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "readm_bar_type",
+  "position": {
+    "x": 20,
+    "y": 470,
+    "z": 0,
+    "width": 620,
+    "height": 235,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_inpatient_stay"
+                    }
+                  },
+                  "Property": "admission_type"
+                }
+              },
+              "queryRef": "fct_inpatient_stay.admission_type",
+              "nativeQueryRef": "admission_type"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Readmission Rate"
+                }
+              },
+              "queryRef": "_Measures.Readmission Rate",
+              "nativeQueryRef": "Readmission Rate"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Readmission rate by index admission type'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

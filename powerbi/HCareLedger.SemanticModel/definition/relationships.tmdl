@@ -1,0 +1,79 @@
+relationship 03535a8b-e332-5a0c-b669-18a218f12308
+	fromColumn: fct_claim_line.bene_year_key
+	toColumn: dim_beneficiary_year.bene_year_key
+
+relationship 3c454d89-7748-5df3-96a1-560b4479d59d
+	fromColumn: fct_claim_line.incurred_month_key
+	toColumn: dim_date.date_key
+
+relationship 40304da8-a2f5-5cc2-b573-f2a6eeb4116a
+	fromColumn: fct_claim_line.service_type_key
+	toColumn: dim_service_type.service_type_key
+
+relationship eebd6d59-b03d-5876-b1e9-b61ac517d5e2
+	fromColumn: fct_claim_line.principal_diagnosis_key
+	toColumn: dim_diagnosis.diagnosis_key
+
+relationship 987390ac-6fcb-5f24-94db-23516723f9b4
+	fromColumn: fct_claim_line.billing_provider_key
+	toColumn: dim_provider.provider_key
+
+relationship 3197e944-e294-52be-bfe5-80d016f03085
+	isActive: false
+	fromColumn: fct_claim_line.from_date_key
+	toColumn: dim_date.date_key
+
+relationship 0a5fa2ca-5585-52be-98b5-bf7d3b9da207
+	isActive: false
+	fromColumn: fct_claim_line.clinician_provider_key
+	toColumn: dim_provider.provider_key
+
+relationship 689cac13-8982-5531-b751-c86199a719b5
+	fromColumn: fct_drug_event.bene_year_key
+	toColumn: dim_beneficiary_year.bene_year_key
+
+relationship 272200e9-cca0-5a80-93f9-6d9541d76f47
+	fromColumn: fct_drug_event.incurred_month_key
+	toColumn: dim_date.date_key
+
+relationship acc9e709-03a0-5c02-84f6-2e4fe1ef5d09
+	fromColumn: fct_drug_event.service_type_key
+	toColumn: dim_service_type.service_type_key
+
+relationship 697dddbe-57eb-5f2b-9c04-c0d79610199b
+	fromColumn: fct_drug_event.prescriber_provider_key
+	toColumn: dim_provider.provider_key
+
+relationship 91a51411-4f85-5148-a7c0-2cbbb6d8a8a8
+	isActive: false
+	fromColumn: fct_drug_event.service_date_key
+	toColumn: dim_date.date_key
+
+relationship 0172a384-b6f6-5947-be12-a2d58d9a1ceb
+	fromColumn: fct_member_month.bene_year_key
+	toColumn: dim_beneficiary_year.bene_year_key
+
+relationship a72078ef-8950-52f0-8a0f-bbbca109c10c
+	fromColumn: fct_member_month.month_key
+	toColumn: dim_date.date_key
+
+relationship cd65c2d3-0650-5ca8-9ce1-e10829b1c77b
+	fromColumn: fct_inpatient_stay.bene_year_key
+	toColumn: dim_beneficiary_year.bene_year_key
+
+relationship 54ae582b-941a-5fef-91d5-93f914695db9
+	fromColumn: fct_inpatient_stay.admission_date_key
+	toColumn: dim_date.date_key
+
+relationship 3fe63341-76eb-505c-a5e4-7c96dd32697d
+	fromColumn: fct_inpatient_stay.principal_diagnosis_key
+	toColumn: dim_diagnosis.diagnosis_key
+
+relationship 86f6f82b-e6ba-5006-91d3-cd0370002447
+	fromColumn: fct_inpatient_stay.facility_provider_key
+	toColumn: dim_provider.provider_key
+
+relationship f4694234-37ca-518e-b938-4da843b8fc6c
+	isActive: false
+	fromColumn: fct_inpatient_stay.discharge_date_key
+	toColumn: dim_date.date_key

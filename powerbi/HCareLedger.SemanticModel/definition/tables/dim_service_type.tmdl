@@ -1,0 +1,60 @@
+/// Benefit category of a claim line or drug event. Drives PMPM by service type.
+table dim_service_type
+	lineageTag: 07d05403-7717-5ade-8059-9cefe3300208
+
+	/// Primary key.
+	column service_type_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 8fad6e36-b881-504e-b764-9f95a50ff394
+		summarizeBy: none
+		sourceColumn: service_type_key
+
+	/// Source CMS file: carrier, dme, inpatient, outpatient, snf, hha, hospice, pde.
+	column claim_type
+		dataType: string
+		lineageTag: 57e46efc-e17e-5105-aedd-57a3ca668c2d
+		summarizeBy: none
+		sourceColumn: claim_type
+
+	/// Reporting label (Inpatient, Outpatient, Professional, ...).
+	column service_type
+		dataType: string
+		lineageTag: 4e66e39a-ac93-5a70-af22-a304d4d3bb62
+		summarizeBy: none
+		sourceColumn: service_type
+		sortByColumn: sort_order
+
+	/// Medicare benefit: Part A, Part B or Part D.
+	column benefit
+		dataType: string
+		lineageTag: 696219d9-326b-53c1-a9b3-1e4bbfe99a7d
+		summarizeBy: none
+		sourceColumn: benefit
+
+	/// Facility, Professional or Pharmacy.
+	column setting
+		dataType: string
+		lineageTag: d2774ae1-acbc-5f21-9e5d-a3c9dc587731
+		summarizeBy: none
+		sourceColumn: setting
+
+	/// Display order for reports.
+	column sort_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 926286cd-0d39-55b8-ae45-3ef0446d5313
+		summarizeBy: none
+		sourceColumn: sort_order
+
+	partition dim_service_type = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\dim_service_type.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"service_type_key", Int64.Type}, {"claim_type", type text}, {"service_type", type text}, {"benefit", type text}, {"setting", type text}, {"sort_order", Int64.Type}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

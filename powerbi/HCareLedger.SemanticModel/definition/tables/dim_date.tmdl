@@ -1,0 +1,143 @@
+/// Calendar dimension, one row per day from 2014-01-01 to 2025-12-31. Role-plays as service, paid and month dates.
+table dim_date
+	lineageTag: 434696da-bb4b-5d4b-9d79-540eeac25351
+	dataCategory: Time
+
+	/// Primary key, integer YYYYMMDD.
+	column date_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 1f9acdd0-7f90-5add-9149-90cbbe365eca
+		summarizeBy: none
+		sourceColumn: date_key
+
+	/// Calendar date.
+	column date
+		dataType: dateTime
+		formatString: Short Date
+		isKey
+		lineageTag: cff57c50-260f-55ef-998a-6dfa245e8b07
+		summarizeBy: none
+		sourceColumn: date
+
+	/// Calendar year.
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 92c8f9a8-c427-5770-b117-aee0e414b520
+		summarizeBy: none
+		sourceColumn: year
+
+	/// Calendar quarter, 1-4.
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: bb9a4f1e-e5a7-55bb-b3b7-770abd9e2f85
+		summarizeBy: none
+		sourceColumn: quarter
+
+	/// Quarter label, Q1-Q4.
+	column quarter_label
+		dataType: string
+		lineageTag: 1d731b08-cd52-5582-ab76-3b9f78b5f325
+		summarizeBy: none
+		sourceColumn: quarter_label
+		sortByColumn: quarter
+
+	/// Month number, 1-12.
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: da50ecee-6678-5475-b7f8-732b1c10cca3
+		summarizeBy: none
+		sourceColumn: month
+
+	/// Month abbreviation (Jan).
+	column month_short
+		dataType: string
+		lineageTag: 9b0a3660-0107-57ab-a8cc-c0c8b0e4b2e2
+		summarizeBy: none
+		sourceColumn: month_short
+		sortByColumn: month
+
+	/// Month name (January).
+	column month_name
+		dataType: string
+		lineageTag: a0b76183-3bbb-538c-b2cb-34b96573dc09
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month
+
+	/// First day of the month containing this date.
+	column month_start
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 16832de1-3321-5025-839a-88bf4d64a8ba
+		summarizeBy: none
+		sourceColumn: month_start
+
+	/// date_key of month_start; facts carry incurred_month_key at this grain.
+	column month_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: c6a56a43-c07a-5887-99b6-0c9f8fc86c4b
+		summarizeBy: none
+		sourceColumn: month_key
+
+	/// Month label, YYYY-MM.
+	column year_month
+		dataType: string
+		lineageTag: 353e08cf-c0e4-5a65-b07e-9490c28ee14f
+		summarizeBy: none
+		sourceColumn: year_month
+
+	/// Sortable month number, YYYYMM.
+	column year_month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e85202f-fa26-5eec-b3c2-2caf40170e30
+		summarizeBy: none
+		sourceColumn: year_month_number
+
+	/// ISO day of week, 1 = Monday.
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 5368a7f6-5a07-58c0-97dd-e5e3c9a4c10b
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	/// Day abbreviation (Mon).
+	column day_name
+		dataType: string
+		lineageTag: a20a56ee-aa92-5dc9-9ad1-872a90baed01
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: day_of_week
+
+	/// True on the last day of the month.
+	column is_month_end
+		dataType: boolean
+		lineageTag: 4d7a84ff-90be-5b3f-a16d-0673ac57be17
+		summarizeBy: none
+		sourceColumn: is_month_end
+
+	/// True from 2015-03-01 to 2023-02-28, the complete months of claims experience.
+	column is_in_reporting_window
+		dataType: boolean
+		lineageTag: 261352ad-c49f-556f-b4d3-8c3899859e57
+		summarizeBy: none
+		sourceColumn: is_in_reporting_window
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\dim_date.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"date_key", Int64.Type}, {"date", type date}, {"year", Int64.Type}, {"quarter", Int64.Type}, {"quarter_label", type text}, {"month", Int64.Type}, {"month_short", type text}, {"month_name", type text}, {"month_start", type date}, {"month_key", Int64.Type}, {"year_month", type text}, {"year_month_number", Int64.Type}, {"day_of_week", Int64.Type}, {"day_name", type text}, {"is_month_end", type logical}, {"is_in_reporting_window", type logical}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

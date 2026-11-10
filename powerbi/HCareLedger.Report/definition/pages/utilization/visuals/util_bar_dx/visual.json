@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "util_bar_dx",
+  "position": {
+    "x": 20,
+    "y": 470,
+    "z": 0,
+    "width": 620,
+    "height": 235,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_diagnosis"
+                    }
+                  },
+                  "Property": "category_description"
+                }
+              },
+              "queryRef": "dim_diagnosis.category_description",
+              "nativeQueryRef": "category_description"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Medical Paid (Top 10 Dx)"
+                }
+              },
+              "queryRef": "_Measures.Medical Paid (Top 10 Dx)",
+              "nativeQueryRef": "Medical Paid (Top 10 Dx)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "Medical Paid (Top 10 Dx)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top 10 diagnosis categories by medical paid'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

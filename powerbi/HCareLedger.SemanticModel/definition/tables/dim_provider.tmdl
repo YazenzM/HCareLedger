@@ -1,0 +1,75 @@
+/// Providers referenced in claims and drug events: facilities (CCN) and clinicians/organisations (NPI). Synthetic IDs carry no names. Key -1 = unknown.
+table dim_provider
+	lineageTag: 5fa3197b-52a1-50f9-9970-8dacd57e4a8d
+
+	/// Surrogate primary key.
+	column provider_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f01791d0-cdc0-51d0-870d-7368db701ad1
+		summarizeBy: none
+		sourceColumn: provider_key
+
+	/// NPI (10 digits) or CMS Certification Number (6 characters).
+	column provider_id
+		dataType: string
+		lineageTag: d27f452e-3456-5048-957b-6ab470fc1ad4
+		summarizeBy: none
+		sourceColumn: provider_id
+
+	/// NPI or CCN.
+	column id_type
+		dataType: string
+		lineageTag: 19834607-36d2-52be-b996-0f7de2e3a421
+		summarizeBy: none
+		sourceColumn: id_type
+
+	/// Roles this ID appears in: Attending, Billing, Facility, Prescriber, Rendering.
+	column roles
+		dataType: string
+		lineageTag: 11003fb0-2b9b-5430-bfca-144dc83eb014
+		summarizeBy: none
+		sourceColumn: roles
+
+	/// Most frequent provider state on its claims.
+	column state_code
+		dataType: string
+		lineageTag: bf24b7fe-7bbe-54f7-81b1-ea95feb32ec4
+		summarizeBy: none
+		sourceColumn: state_code
+
+	/// Earliest service date on which the ID appears.
+	column first_seen_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 543050f3-2e6c-5307-a24f-cfb064f38d79
+		summarizeBy: none
+		sourceColumn: first_seen_date
+
+	/// Latest service date on which the ID appears.
+	column last_seen_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: ce026707-837b-50d2-8411-aeedc6ccc446
+		summarizeBy: none
+		sourceColumn: last_seen_date
+
+	/// Number of claim or drug-event references.
+	column reference_count
+		dataType: int64
+		formatString: #,0
+		lineageTag: 67cbeea0-bcee-58d6-a20e-615655a62ab3
+		summarizeBy: none
+		sourceColumn: reference_count
+
+	partition dim_provider = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\dim_provider.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"provider_key", Int64.Type}, {"provider_id", type text}, {"id_type", type text}, {"roles", type text}, {"state_code", type text}, {"first_seen_date", type date}, {"last_seen_date", type date}, {"reference_count", Int64.Type}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

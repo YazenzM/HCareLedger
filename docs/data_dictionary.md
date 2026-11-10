@@ -11,20 +11,23 @@ Every dimension except `dim_date` has an unknown member with key `-1`; facts nev
 | --- | --- | --- | --- |
 | fct_claim_line | bene_year_key | dim_beneficiary_year | bene_year_key |
 | fct_claim_line | incurred_month_key | dim_date | date_key |
-| fct_claim_line | from_date_key | dim_date | date_key (inactive role) |
 | fct_claim_line | service_type_key | dim_service_type | service_type_key |
 | fct_claim_line | principal_diagnosis_key | dim_diagnosis | diagnosis_key |
 | fct_claim_line | billing_provider_key | dim_provider | provider_key |
+| fct_claim_line | from_date_key | dim_date | date_key (inactive role) |
 | fct_claim_line | clinician_provider_key | dim_provider | provider_key (inactive role) |
 | fct_drug_event | bene_year_key | dim_beneficiary_year | bene_year_key |
 | fct_drug_event | incurred_month_key | dim_date | date_key |
 | fct_drug_event | service_type_key | dim_service_type | service_type_key |
-| fct_drug_event | prescriber_provider_key | dim_provider | provider_key (inactive role) |
+| fct_drug_event | prescriber_provider_key | dim_provider | provider_key |
+| fct_drug_event | service_date_key | dim_date | date_key (inactive role) |
 | fct_member_month | bene_year_key | dim_beneficiary_year | bene_year_key |
 | fct_member_month | month_key | dim_date | date_key |
 | fct_inpatient_stay | bene_year_key | dim_beneficiary_year | bene_year_key |
-| fct_inpatient_stay | discharge_date_key | dim_date | date_key (inactive role) |
+| fct_inpatient_stay | admission_date_key | dim_date | date_key |
 | fct_inpatient_stay | principal_diagnosis_key | dim_diagnosis | diagnosis_key |
+| fct_inpatient_stay | facility_provider_key | dim_provider | provider_key |
+| fct_inpatient_stay | discharge_date_key | dim_date | date_key (inactive role) |
 
 ## Tables
 
@@ -95,7 +98,7 @@ Grain: one row per Part D drug event.
 | days_supply | INTEGER | Days supply. |
 | fill_number | INTEGER | Fill number (0 = original fill). |
 | total_drug_cost | DECIMAL(18,2) | Gross drug cost (TOT_RX_CST_AMT) = patient pay + other TrOOP + LICS + PLRO + plan paid. |
-| plan_paid_amount | DECIMAL(19,2) | Covered + non-covered plan paid amount. Part D PMPM numerator. |
+| plan_paid_amount | DECIMAL(18,2) | Covered + non-covered plan paid amount. Part D PMPM numerator. |
 | covered_plan_paid_amount | DECIMAL(18,2) | Plan paid for covered Part D drugs (CVRD_D_PLAN_PD_AMT). |
 | noncovered_plan_paid_amount | DECIMAL(18,2) | Plan paid for supplemental, non-Part D drugs (NCVRD_PLAN_PD_AMT). |
 | patient_pay_amount | DECIMAL(18,2) | Beneficiary cost sharing. |
@@ -137,13 +140,13 @@ Grain: one row per merged acute inpatient stay.
 | --- | --- | --- |
 | stay_key | BIGINT | Surrogate primary key. |
 | bene_id | VARCHAR | Beneficiary ID (degenerate). |
-| stay_seq | HUGEINT | Stay sequence number within the beneficiary. |
+| stay_seq | INTEGER | Stay sequence number within the beneficiary. |
 | bene_year_key | INTEGER | FK to dim_beneficiary_year for the admission year. |
 | admission_date_key | INTEGER | FK to dim_date: admission date. |
 | discharge_date_key | INTEGER | FK to dim_date: discharge date. |
 | length_of_stay | BIGINT | Discharge date minus admission date, in days (0 = same-day). |
 | claim_count | BIGINT | Inpatient claims merged into the stay. |
-| paid_amount | DECIMAL(38,2) | Sum of claim header payments for the stay. |
+| paid_amount | DECIMAL(18,2) | Sum of claim header payments for the stay. |
 | first_claim_id | VARCHAR | CLM_ID of the first claim in the stay. |
 | principal_diagnosis_key | INTEGER | FK to dim_diagnosis: principal diagnosis of the first claim. |
 | facility_provider_key | INTEGER | FK to dim_provider: admitting facility CCN. |
@@ -174,6 +177,7 @@ Grain: one row per beneficiary per year.
 | death_date | DATE | Date of death. Null for every synthetic beneficiary. |
 | age_at_end_of_year | INTEGER | Age on 31 December of the year (AGE_AT_END_REF_YR). |
 | age_band | VARCHAR | Age band: Under 65, 65-69, 70-74, 75-79, 80-84, 85+. |
+| age_band_order | INTEGER | Sort order for age_band (1 = Under 65 ... 6 = 85+). |
 | sex_code | VARCHAR | SEX_IDENT_CD: 1 = male, 2 = female. |
 | sex | VARCHAR | Male / Female from SEX_IDENT_CD. |
 | race_code | VARCHAR | BENE_RACE_CD: 0-6. |
@@ -188,6 +192,7 @@ Grain: one row per beneficiary per year.
 | part_d_months | BIGINT | Months enrolled in a Part D contract, derived from monthly contract IDs. |
 | dual_months | BIGINT | Months dually eligible for Medicaid (monthly dual status 01-06, 08). |
 | is_dual_any_month | BOOLEAN | Dually eligible for Medicaid in at least one month of the year. |
+| dual_status | VARCHAR | Dual eligible / Medicare only (label of is_dual_any_month). |
 | medical_member_months | BIGINT | Months with Part A and Part B and no HMO; the denominator for medical PMPM. |
 | rx_member_months | BIGINT | Months enrolled in Part D; the denominator for Part D PMPM. |
 

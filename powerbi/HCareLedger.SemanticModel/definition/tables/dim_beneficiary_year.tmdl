@@ -1,0 +1,203 @@
+/// Beneficiary-year dimension: demographics and enrollment summary for one beneficiary in one calendar year. Key -1 = unknown.
+table dim_beneficiary_year
+	lineageTag: b4c20b86-72d6-5d7c-9880-71c8bcfe7ae4
+
+	/// Surrogate primary key.
+	column bene_year_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f0d65360-d48b-5e57-b0c9-111957ca2297
+		summarizeBy: none
+		sourceColumn: bene_year_key
+
+	/// CMS synthetic beneficiary ID (BENE_ID). Natural key together with year.
+	column bene_id
+		dataType: string
+		lineageTag: 9ed826e3-c165-5bcb-beda-a710a634baba
+		summarizeBy: none
+		sourceColumn: bene_id
+
+	/// Enrollment reference year.
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: d7bee8f7-d8b3-5348-94fb-3191d8dfa61b
+		summarizeBy: none
+		sourceColumn: year
+
+	/// Date of birth (constant across years).
+	column birth_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 22327f8b-366b-55ab-b49f-5d51e3fc01ab
+		summarizeBy: none
+		sourceColumn: birth_date
+
+	/// Date of death. Null for every synthetic beneficiary.
+	column death_date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c28327c1-1b89-5ad1-8867-ebfabaad0980
+		summarizeBy: none
+		sourceColumn: death_date
+
+	/// Age on 31 December of the year (AGE_AT_END_REF_YR).
+	column age_at_end_of_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 7875432c-18cc-5769-aa0e-a47c88b43bbd
+		summarizeBy: none
+		sourceColumn: age_at_end_of_year
+
+	/// Age band: Under 65, 65-69, 70-74, 75-79, 80-84, 85+.
+	column age_band
+		dataType: string
+		lineageTag: 2ea85da1-8b45-5186-aa3a-3673f30b33a2
+		summarizeBy: none
+		sourceColumn: age_band
+		sortByColumn: age_band_order
+
+	/// Sort order for age_band (1 = Under 65 ... 6 = 85+).
+	column age_band_order
+		dataType: int64
+		formatString: 0
+		lineageTag: fdc262bd-01ab-5884-af8b-013dfd167c48
+		summarizeBy: none
+		sourceColumn: age_band_order
+
+	/// SEX_IDENT_CD: 1 = male, 2 = female.
+	column sex_code
+		dataType: string
+		lineageTag: 13c50364-9d76-56e1-970f-744322682584
+		summarizeBy: none
+		sourceColumn: sex_code
+
+	/// Male / Female from SEX_IDENT_CD.
+	column sex
+		dataType: string
+		lineageTag: 864256fd-9df9-5ac6-9faf-13016d7fdfc6
+		summarizeBy: none
+		sourceColumn: sex
+
+	/// BENE_RACE_CD: 0-6.
+	column race_code
+		dataType: string
+		lineageTag: f8b884b1-fef2-5ea6-80d6-cda8c623a85e
+		summarizeBy: none
+		sourceColumn: race_code
+
+	/// Race from BENE_RACE_CD.
+	column race
+		dataType: string
+		lineageTag: cf52d531-1add-5b61-9506-18b80759de9c
+		summarizeBy: none
+		sourceColumn: race
+
+	/// SSA state code of residence.
+	column state_code
+		dataType: string
+		lineageTag: 34f13302-d70d-5597-8e71-9c36781c5d9f
+		summarizeBy: none
+		sourceColumn: state_code
+
+	/// SSA county code of residence.
+	column county_code
+		dataType: string
+		lineageTag: 6e0fb7f2-5206-5899-acd3-4c0e3a2a14a4
+		summarizeBy: none
+		sourceColumn: county_code
+
+	/// ENTLMT_RSN_ORIG: 0 = old age, 1 = disability, 2 = ESRD, 3 = disability and ESRD.
+	column orig_entitlement_reason_code
+		dataType: string
+		lineageTag: 8f8c3396-7e23-5281-88fe-960ed1719f24
+		summarizeBy: none
+		sourceColumn: orig_entitlement_reason_code
+
+	/// Original reason for Medicare entitlement: Old age, Disability, ESRD, Disability and ESRD.
+	column orig_entitlement_reason
+		dataType: string
+		lineageTag: 471e6610-38c9-58c0-86a2-5655de7bcc91
+		summarizeBy: none
+		sourceColumn: orig_entitlement_reason
+
+	/// End-stage renal disease indicator.
+	column esrd_flag
+		dataType: boolean
+		lineageTag: b7277c08-d2be-5b31-8177-760d1932efad
+		summarizeBy: none
+		sourceColumn: esrd_flag
+
+	/// Months with Part A entitlement, derived from monthly buy-in flags.
+	column part_a_months
+		dataType: int64
+		formatString: #,0
+		lineageTag: 3f6aec99-32bb-5d1d-834c-6ecbd894c94f
+		summarizeBy: none
+		sourceColumn: part_a_months
+
+	/// Months with Part B entitlement, derived from monthly buy-in flags.
+	column part_b_months
+		dataType: int64
+		formatString: #,0
+		lineageTag: 595f77a7-c4e6-55d7-854b-25bf65d67b8b
+		summarizeBy: none
+		sourceColumn: part_b_months
+
+	/// Months enrolled in a Part D contract, derived from monthly contract IDs.
+	column part_d_months
+		dataType: int64
+		formatString: #,0
+		lineageTag: 8d14b72b-fdb2-5706-8b04-2210bfdfcbc8
+		summarizeBy: none
+		sourceColumn: part_d_months
+
+	/// Months dually eligible for Medicaid (monthly dual status 01-06, 08).
+	column dual_months
+		dataType: int64
+		formatString: #,0
+		lineageTag: a133b437-a65d-5ce0-8602-654565c026d5
+		summarizeBy: none
+		sourceColumn: dual_months
+
+	/// Dually eligible for Medicaid in at least one month of the year.
+	column is_dual_any_month
+		dataType: boolean
+		lineageTag: 950d2f6d-ff86-5f6a-96fa-e9bcbf703495
+		summarizeBy: none
+		sourceColumn: is_dual_any_month
+
+	/// Dual eligible / Medicare only (label of is_dual_any_month).
+	column dual_status
+		dataType: string
+		lineageTag: 434a5406-1d04-534c-b2b2-3dc05d4e10d7
+		summarizeBy: none
+		sourceColumn: dual_status
+
+	/// Months with Part A and Part B and no HMO; the denominator for medical PMPM.
+	column medical_member_months
+		dataType: int64
+		formatString: #,0
+		lineageTag: c54e470a-4237-57e4-a6aa-54a2466a83ee
+		summarizeBy: none
+		sourceColumn: medical_member_months
+
+	/// Months enrolled in Part D; the denominator for Part D PMPM.
+	column rx_member_months
+		dataType: int64
+		formatString: #,0
+		lineageTag: a7a4e87d-0d95-57a7-88b0-3648d19faf96
+		summarizeBy: none
+		sourceColumn: rx_member_months
+
+	partition dim_beneficiary_year = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\dim_beneficiary_year.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"bene_year_key", Int64.Type}, {"bene_id", type text}, {"year", Int64.Type}, {"birth_date", type date}, {"death_date", type date}, {"age_at_end_of_year", Int64.Type}, {"age_band", type text}, {"age_band_order", Int64.Type}, {"sex_code", type text}, {"sex", type text}, {"race_code", type text}, {"race", type text}, {"state_code", type text}, {"county_code", type text}, {"orig_entitlement_reason_code", type text}, {"orig_entitlement_reason", type text}, {"esrd_flag", type logical}, {"part_a_months", Int64.Type}, {"part_b_months", Int64.Type}, {"part_d_months", Int64.Type}, {"dual_months", Int64.Type}, {"is_dual_any_month", type logical}, {"dual_status", type text}, {"medical_member_months", Int64.Type}, {"rx_member_months", Int64.Type}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

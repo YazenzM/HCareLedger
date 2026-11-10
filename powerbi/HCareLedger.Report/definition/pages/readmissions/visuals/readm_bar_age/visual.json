@@ -1,0 +1,78 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "readm_bar_age",
+  "position": {
+    "x": 655,
+    "y": 215,
+    "z": 0,
+    "width": 605,
+    "height": 240,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_beneficiary_year"
+                    }
+                  },
+                  "Property": "age_band"
+                }
+              },
+              "queryRef": "dim_beneficiary_year.age_band",
+              "nativeQueryRef": "age_band"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Readmission Rate"
+                }
+              },
+              "queryRef": "_Measures.Readmission Rate",
+              "nativeQueryRef": "Readmission Rate"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Readmission rate by age band'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,114 @@
+/// Periodic snapshot: one row per beneficiary per month enrolled in Medicare. Sum medical_member_month or rx_member_month to get PMPM denominators.
+table fct_member_month
+	lineageTag: 5ab4a62b-a6fc-5adb-adfb-8d87dd977f88
+
+	/// Surrogate primary key.
+	column member_month_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 7d548046-ab93-5c12-8c2b-cc2bd1f178ed
+		summarizeBy: none
+		sourceColumn: member_month_key
+
+	/// FK to dim_beneficiary_year.
+	column bene_year_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 2ae5c826-588f-583d-86e9-ed5d030eac26
+		summarizeBy: none
+		sourceColumn: bene_year_key
+
+	/// Beneficiary ID (degenerate, for distinct counts).
+	column bene_id
+		dataType: string
+		isHidden
+		lineageTag: 31c10ab6-a5b8-5aec-8a90-59838050d059
+		summarizeBy: none
+		sourceColumn: bene_id
+
+	/// FK to dim_date (first day of the month).
+	column month_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 5b7a44f2-cc7e-5a0d-a45e-b1cb005e4ba9
+		summarizeBy: none
+		sourceColumn: month_key
+
+	/// Entitled to Part A this month.
+	column has_part_a
+		dataType: boolean
+		lineageTag: 48b8064b-561f-533a-ac26-fa406d7dc6ac
+		summarizeBy: none
+		sourceColumn: has_part_a
+
+	/// Entitled to Part B this month.
+	column has_part_b
+		dataType: boolean
+		lineageTag: 2c08ddfb-3138-55fd-824a-b47c77efec8c
+		summarizeBy: none
+		sourceColumn: has_part_b
+
+	/// Enrolled in a Part D contract this month.
+	column has_part_d
+		dataType: boolean
+		lineageTag: 7fe1c5b9-c2f5-516d-b42e-4fad187f3586
+		summarizeBy: none
+		sourceColumn: has_part_d
+
+	/// Enrolled in Medicare Advantage this month (never true in the synthetic data).
+	column has_hmo
+		dataType: boolean
+		lineageTag: f4520c9c-36cf-5bbc-8bbc-827ce9c2be1f
+		summarizeBy: none
+		sourceColumn: has_hmo
+
+	/// Dually eligible for Medicaid this month.
+	column is_dual
+		dataType: boolean
+		lineageTag: ec8caeb7-352e-549a-9d06-6d8373adf3c6
+		summarizeBy: none
+		sourceColumn: is_dual
+
+	/// Full-benefit dual (status 02, 04, 08).
+	column is_full_dual
+		dataType: boolean
+		lineageTag: 9bb1e5e8-3d36-51a3-a574-f36cdade86bf
+		summarizeBy: none
+		sourceColumn: is_full_dual
+
+	/// 1 when Part A + Part B + no HMO; medical PMPM denominator.
+	column medical_member_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 02e353e2-7c87-5c08-b256-3cfb31bab856
+		summarizeBy: none
+		sourceColumn: medical_member_month
+
+	/// 1 when enrolled in Part D; Part D PMPM denominator.
+	column rx_member_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 7cb172a7-e4cb-5307-8348-37fbc3e49d1f
+		summarizeBy: none
+		sourceColumn: rx_member_month
+
+	/// Month falls in Mar-2015 .. Feb-2023.
+	column is_in_reporting_window
+		dataType: boolean
+		lineageTag: 9ce4ca2c-e88f-5f86-bdf5-7067e0cf5417
+		summarizeBy: none
+		sourceColumn: is_in_reporting_window
+
+	partition fct_member_month = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\fct_member_month.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"member_month_key", Int64.Type}, {"bene_year_key", Int64.Type}, {"bene_id", type text}, {"month_key", Int64.Type}, {"has_part_a", type logical}, {"has_part_b", type logical}, {"has_part_d", type logical}, {"has_hmo", type logical}, {"is_dual", type logical}, {"is_full_dual", type logical}, {"medical_member_month", Int64.Type}, {"rx_member_month", Int64.Type}, {"is_in_reporting_window", type logical}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,23 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["DataFolder","_Measures","dim_date","dim_service_type","dim_beneficiary_year","dim_provider","dim_diagnosis","fct_claim_line","fct_drug_event","fct_member_month","fct_inpatient_stay"]
+
+ref table _Measures
+ref table dim_date
+ref table dim_service_type
+ref table dim_beneficiary_year
+ref table dim_provider
+ref table dim_diagnosis
+ref table fct_claim_line
+ref table fct_drug_event
+ref table fct_member_month
+ref table fct_inpatient_stay

@@ -1,0 +1,87 @@
+/// ICD-10-CM diagnosis codes seen on claims. Descriptions come from the FY2023 ICD-10-CM order file by longest-prefix match. Key -1 = no diagnosis.
+table dim_diagnosis
+	lineageTag: cc4117ec-d7af-5720-8361-fce8dc80e29f
+
+	/// Surrogate primary key.
+	column diagnosis_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f0f3f868-5db0-57a5-8459-82b18289ee60
+		summarizeBy: none
+		sourceColumn: diagnosis_key
+
+	/// ICD-10-CM code as it appears on the claim, no decimal point.
+	column diagnosis_code
+		dataType: string
+		lineageTag: 36eeb82c-ece0-5bc2-86cc-4c102cf11d97
+		summarizeBy: none
+		sourceColumn: diagnosis_code
+
+	/// Description of the longest matching ICD-10-CM code or header.
+	column diagnosis_description
+		dataType: string
+		lineageTag: 879c5576-a5ac-5369-8a6e-dfbc6febce17
+		summarizeBy: none
+		sourceColumn: diagnosis_description
+
+	/// exact = code exists in FY2023 ICD-10-CM; prefix = described by a parent header (e.g. a code missing its 7th character); unmatched = no match.
+	column match_type
+		dataType: string
+		lineageTag: ad0200c6-3a64-5b3b-a245-877783fc9e61
+		summarizeBy: none
+		sourceColumn: match_type
+
+	/// The ICD-10-CM code or header that supplied the description.
+	column matched_code
+		dataType: string
+		lineageTag: 69cc3000-e272-5543-89f9-7b281f616031
+		summarizeBy: none
+		sourceColumn: matched_code
+
+	/// True when the claim code is itself a billable FY2023 code.
+	column is_billable_code
+		dataType: boolean
+		lineageTag: 8b3cf793-ad27-5edf-8189-548ceb562b76
+		summarizeBy: none
+		sourceColumn: is_billable_code
+
+	/// Three-character ICD-10-CM category.
+	column category_code
+		dataType: string
+		lineageTag: 41e0448e-7e36-5c30-afb3-1948e03a6aed
+		summarizeBy: none
+		sourceColumn: category_code
+
+	/// Description of the three-character category.
+	column category_description
+		dataType: string
+		lineageTag: d3d3e5bd-19b6-5190-bb04-6f064aeaae80
+		summarizeBy: none
+		sourceColumn: category_description
+
+	/// ICD-10-CM chapter, 1-22.
+	column chapter_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 69e2e7a4-022b-5350-93fd-0bcf153d941f
+		summarizeBy: none
+		sourceColumn: chapter_number
+
+	/// ICD-10-CM chapter title.
+	column chapter_description
+		dataType: string
+		lineageTag: bb22fd3f-bd57-5865-976d-c99f83e4e3db
+		summarizeBy: none
+		sourceColumn: chapter_description
+
+	partition dim_diagnosis = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\dim_diagnosis.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"diagnosis_key", Int64.Type}, {"diagnosis_code", type text}, {"diagnosis_description", type text}, {"match_type", type text}, {"matched_code", type text}, {"is_billable_code", type logical}, {"category_code", type text}, {"category_description", type text}, {"chapter_number", Int64.Type}, {"chapter_description", type text}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

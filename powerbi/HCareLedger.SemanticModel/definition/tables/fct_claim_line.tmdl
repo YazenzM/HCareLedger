@@ -1,0 +1,192 @@
+/// One row per medical claim line across inpatient, outpatient, SNF, home health, hospice, professional (carrier) and DME claims. SUM(paid_amount) over whole claims equals CMS header payments.
+table fct_claim_line
+	lineageTag: 6e96df78-b1fb-548b-bcd3-7581a5b50990
+
+	/// Surrogate primary key.
+	column claim_line_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: b482d80c-5583-56f6-89d2-6d4f10be73db
+		summarizeBy: none
+		sourceColumn: claim_line_key
+
+	/// CMS claim ID (CLM_ID), degenerate dimension. Unique across claim types.
+	column claim_id
+		dataType: string
+		lineageTag: 73ecd0c0-79b4-5945-be1e-135c901c1127
+		summarizeBy: none
+		sourceColumn: claim_id
+
+	/// Line number within the claim (LINE_NUM or CLM_LINE_NUM).
+	column line_number
+		dataType: int64
+		formatString: 0
+		lineageTag: b7720a80-ff30-5056-836a-fee3756e9682
+		summarizeBy: none
+		sourceColumn: line_number
+
+	/// FK to dim_service_type.
+	column service_type_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: e0073a47-5922-58d8-9bbe-a9ae058e376d
+		summarizeBy: none
+		sourceColumn: service_type_key
+
+	/// FK to dim_beneficiary_year for the year of the claim from date; -1 when no enrollment record exists.
+	column bene_year_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 567e4211-cec1-5a71-8c24-2afc354b3784
+		summarizeBy: none
+		sourceColumn: bene_year_key
+
+	/// Beneficiary ID (degenerate, for distinct member counts).
+	column bene_id
+		dataType: string
+		isHidden
+		lineageTag: b0b31589-5dc9-52cd-ac41-fc7c20801fc2
+		summarizeBy: none
+		sourceColumn: bene_id
+
+	/// FK to dim_date: claim from date (min across lines).
+	column from_date_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9b00d729-3592-51e7-adc9-840201ce2646
+		summarizeBy: none
+		sourceColumn: from_date_key
+
+	/// FK to dim_date: claim thru date (max across lines).
+	column thru_date_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 1b46c0a4-169a-52ab-8a1c-01dd6733d277
+		summarizeBy: none
+		sourceColumn: thru_date_key
+
+	/// FK to dim_date: first day of the claim from-date month. Used for PMPM.
+	column incurred_month_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f817ad9f-d83d-502d-9743-890854e9c490
+		summarizeBy: none
+		sourceColumn: incurred_month_key
+
+	/// FK to dim_diagnosis: claim principal diagnosis.
+	column principal_diagnosis_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: b71efbac-35de-55bc-9875-509283c74c41
+		summarizeBy: none
+		sourceColumn: principal_diagnosis_key
+
+	/// FK to dim_provider: facility CCN for institutional claims, billing NPI for professional/DME.
+	column billing_provider_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: dc36c9c7-1623-52ff-8eaf-296904707267
+		summarizeBy: none
+		sourceColumn: billing_provider_key
+
+	/// FK to dim_provider: rendering NPI, else attending NPI.
+	column clinician_provider_key
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 89a22906-6e83-5736-850f-6f6d4e912580
+		summarizeBy: none
+		sourceColumn: clinician_provider_key
+
+	/// HCPCS/CPT procedure code on the line.
+	column hcpcs_code
+		dataType: string
+		lineageTag: 02b13257-ae05-5f83-8147-4577642a7d92
+		summarizeBy: none
+		sourceColumn: hcpcs_code
+
+	/// Revenue center code (institutional claims only).
+	column revenue_center_code
+		dataType: string
+		lineageTag: 5fc2b3f4-73bd-5b25-9762-e7c7707e1da5
+		summarizeBy: none
+		sourceColumn: revenue_center_code
+
+	/// Place of service (professional and DME only).
+	column place_of_service_code
+		dataType: string
+		lineageTag: d01fd88b-2dd1-5fd6-b70c-c47e3145cfbb
+		summarizeBy: none
+		sourceColumn: place_of_service_code
+
+	/// Service units on the line.
+	column units
+		dataType: double
+		formatString: #,0.00
+		lineageTag: be355aa3-da02-56e9-9d17-9385b2b9144c
+		summarizeBy: none
+		sourceColumn: units
+
+	/// Medicare paid amount. Professional/DME: line payment. Institutional: claim header payment on the first line, 0 on other lines.
+	column paid_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 02762cac-49ae-5707-aa2b-c0c6abdba6df
+		summarizeBy: none
+		sourceColumn: paid_amount
+
+	/// Submitted charge on the line (null for inpatient).
+	column charge_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 1cd7cd3f-f286-53ba-86bd-de84ef4faa95
+		summarizeBy: none
+		sourceColumn: charge_amount
+
+	/// Allowed amount (professional and DME only).
+	column allowed_amount
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: dbeac457-f3b9-5a76-a2e3-db594f77246f
+		summarizeBy: none
+		sourceColumn: allowed_amount
+
+	/// True for the first line of each claim. SUM of this = claim count.
+	column is_header_line
+		dataType: boolean
+		lineageTag: 78473b9f-895d-5b75-9e20-e923b08cd123
+		summarizeBy: none
+		sourceColumn: is_header_line
+
+	/// Member had Part A + B and no HMO in the incurred month. PMPM numerators include only these lines.
+	column is_medical_eligible_month
+		dataType: boolean
+		lineageTag: 3ca2f73f-0563-530d-afdb-8ff871d4f518
+		summarizeBy: none
+		sourceColumn: is_medical_eligible_month
+
+	/// Claim from date in Mar-2015 .. Feb-2023.
+	column is_in_reporting_window
+		dataType: boolean
+		lineageTag: ff3b91fb-25df-51fc-aa42-fb60b9a0eb8c
+		summarizeBy: none
+		sourceColumn: is_in_reporting_window
+
+	partition fct_claim_line = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\fct_claim_line.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"claim_line_key", Int64.Type}, {"claim_id", type text}, {"line_number", Int64.Type}, {"service_type_key", Int64.Type}, {"bene_year_key", Int64.Type}, {"bene_id", type text}, {"from_date_key", Int64.Type}, {"thru_date_key", Int64.Type}, {"incurred_month_key", Int64.Type}, {"principal_diagnosis_key", Int64.Type}, {"billing_provider_key", Int64.Type}, {"clinician_provider_key", Int64.Type}, {"hcpcs_code", type text}, {"revenue_center_code", type text}, {"place_of_service_code", type text}, {"units", type number}, {"paid_amount", Currency.Type}, {"charge_amount", Currency.Type}, {"allowed_amount", Currency.Type}, {"is_header_line", type logical}, {"is_medical_eligible_month", type logical}, {"is_in_reporting_window", type logical}})
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

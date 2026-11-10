@@ -46,7 +46,7 @@ How each finding is handled:
 
 ## 3. Tests on the star schema
 
-59 tests (`sql/50_tests/tests.sql`, results in `audit.test_results`). **53 of 53 error-severity tests pass**; 6 warning tests quantify known data conditions.
+60 tests (`sql/50_tests/tests.sql`, results in `audit.test_results`). **54 of 54 error-severity tests pass**; 6 warning tests quantify known data conditions.
 
 | # | Type | Model | Column | Severity | Description | Rows tested | Rows failing | % failing | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -58,54 +58,55 @@ How each finding is handled:
 | 6 | accepted_values | fct_drug_event | brand_generic_code | error | In (B, G) | 515,520 | 0 | 0.00 | pass |
 | 7 | accepted_values | fct_inpatient_stay | admission_type_code | error | In (1-5, 9) | 19,846 | 0 | 0.00 | pass |
 | 8 | accepted_values | stg.member_month | buyin_code | error | In (0, 1, 2, 3, A, B, C) or null | 1,043,004 | 0 | 0.00 | pass |
-| 9 | documentation | mart.* | comment | error | Every star-schema column has a data-dictionary description (columns) | 146 | 0 | 0.00 | pass |
-| 10 | not_null | dim_beneficiary_year | birth_date | error | Required field (excl. unknown member) | 86,917 | 0 | 0.00 | pass |
-| 11 | not_null | fct_claim_line | bene_id | error | Required field | 1,888,860 | 0 | 0.00 | pass |
-| 12 | not_null | fct_claim_line | claim_id | error | Required field | 1,888,860 | 0 | 0.00 | pass |
-| 13 | not_null | fct_claim_line | from_date_key | error | Required field | 1,888,860 | 0 | 0.00 | pass |
-| 14 | not_null | fct_claim_line | paid_amount | error | Required field | 1,888,860 | 0 | 0.00 | pass |
-| 15 | not_null | fct_drug_event | service_date_key | error | Required field | 515,520 | 0 | 0.00 | pass |
-| 16 | not_null | fct_drug_event | total_drug_cost | error | Required field | 515,520 | 0 | 0.00 | pass |
-| 17 | not_null | fct_inpatient_stay | admission/discharge date | error | Required field | 19,846 | 0 | 0.00 | pass |
-| 18 | range | dim_beneficiary_year | age_at_end_of_year | error | Age 0-120 | 86,917 | 0 | 0.00 | pass |
-| 19 | range | fct_claim_line | paid_amount | error | Paid amount >= 0 | 1,888,860 | 0 | 0.00 | pass |
-| 20 | range | fct_claim_line | thru_date_key | error | Thru date >= from date | 1,888,860 | 0 | 0.00 | pass |
-| 21 | range | fct_drug_event | days_supply | error | Days supply 1-365 | 515,520 | 0 | 0.00 | pass |
-| 22 | range | fct_drug_event | total_drug_cost | error | Drug cost >= 0 | 515,520 | 0 | 0.00 | pass |
-| 23 | range | fct_inpatient_stay | length_of_stay | error | Length of stay >= 0 | 19,846 | 0 | 0.00 | pass |
-| 24 | reconciliation | fct_claim_line | paid_amount | error | Per-claim SUM(paid_amount) equals CMS header payment (claims) | 555,218 | 0 | 0.00 | pass |
-| 25 | reconciliation | fct_claim_line | row count | error | Every raw claim line lands in the fact (raw lines) | 1,888,860 | 0 | 0.00 | pass |
-| 26 | reconciliation | fct_drug_event | total_drug_cost | error | Gross cost = patient + other TrOOP + LICS + PLRO + plan paid | 515,520 | 0 | 0.00 | pass |
-| 27 | reconciliation | fct_inpatient_stay | claim_count | error | Every inpatient claim is in exactly one stay (claims) | 20,867 | 0 | 0.00 | pass |
-| 28 | relationship | fct_claim_line | bene_year_key | error | FK exists in dim_beneficiary_year | 1,888,860 | 0 | 0.00 | pass |
-| 29 | relationship | fct_claim_line | billing_provider_key | error | FK exists in dim_provider | 1,888,860 | 0 | 0.00 | pass |
-| 30 | relationship | fct_claim_line | clinician_provider_key | error | FK exists in dim_provider | 1,888,860 | 0 | 0.00 | pass |
-| 31 | relationship | fct_claim_line | from_date_key | error | FK exists in dim_date | 1,888,860 | 0 | 0.00 | pass |
-| 32 | relationship | fct_claim_line | incurred_month_key | error | FK exists in dim_date | 1,888,860 | 0 | 0.00 | pass |
-| 33 | relationship | fct_claim_line | principal_diagnosis_key | error | FK exists in dim_diagnosis | 1,888,860 | 0 | 0.00 | pass |
-| 34 | relationship | fct_claim_line | service_type_key | error | FK exists in dim_service_type | 1,888,860 | 0 | 0.00 | pass |
-| 35 | relationship | fct_drug_event | bene_year_key | error | FK exists in dim_beneficiary_year | 515,520 | 0 | 0.00 | pass |
-| 36 | relationship | fct_drug_event | prescriber_provider_key | error | FK exists in dim_provider | 515,520 | 0 | 0.00 | pass |
-| 37 | relationship | fct_drug_event | service_date_key | error | FK exists in dim_date | 515,520 | 0 | 0.00 | pass |
-| 38 | relationship | fct_inpatient_stay | principal_diagnosis_key | error | FK exists in dim_diagnosis | 19,846 | 0 | 0.00 | pass |
-| 39 | relationship | fct_member_month | bene_year_key | error | FK exists in dim_beneficiary_year | 953,004 | 0 | 0.00 | pass |
-| 40 | relationship | fct_member_month | month_key | error | FK exists in dim_date | 953,004 | 0 | 0.00 | pass |
-| 41 | unique | dim_beneficiary_year | bene_id + year | error | Natural key is unique | 86,918 | 0 | 0.00 | pass |
-| 42 | unique | dim_beneficiary_year | bene_year_key | error | Primary key is unique | 86,918 | 0 | 0.00 | pass |
-| 43 | unique | dim_date | date_key | error | Primary key is unique | 4,383 | 0 | 0.00 | pass |
-| 44 | unique | dim_diagnosis | diagnosis_code | error | Natural key is unique | 336 | 0 | 0.00 | pass |
-| 45 | unique | dim_diagnosis | diagnosis_key | error | Primary key is unique | 336 | 0 | 0.00 | pass |
-| 46 | unique | dim_provider | provider_id + id_type | error | Natural key is unique | 29,293 | 0 | 0.00 | pass |
-| 47 | unique | dim_provider | provider_key | error | Primary key is unique | 29,293 | 0 | 0.00 | pass |
-| 48 | unique | dim_service_type | service_type_key | error | Primary key is unique | 8 | 0 | 0.00 | pass |
-| 49 | unique | fct_claim_line | claim_id + line_number | error | Grain is unique | 1,888,860 | 0 | 0.00 | pass |
-| 50 | unique | fct_claim_line | claim_line_key | error | Primary key is unique | 1,888,860 | 0 | 0.00 | pass |
-| 51 | unique | fct_drug_event | pde_id | error | Grain is unique | 515,520 | 0 | 0.00 | pass |
-| 52 | unique | fct_inpatient_stay | stay_key | error | Primary key is unique | 19,846 | 0 | 0.00 | pass |
-| 53 | unique | fct_member_month | bene_id + month_key | error | Grain is unique | 953,004 | 0 | 0.00 | pass |
-| 54 | business_rule | dim_diagnosis | match_type | warn | Diagnosis codes not found exactly in FY2023 ICD-10-CM | 335 | 21 | 6.27 | warn |
-| 55 | business_rule | fct_claim_line | bene_year_key | warn | Lines mapped to the unknown beneficiary-year (-1) | 1,888,860 | 9 | 0.00 | warn |
-| 56 | business_rule | fct_claim_line | clinician_provider_key | warn | Lines with no rendering or attending NPI (-1) | 1,888,860 | 107,039 | 5.67 | warn |
-| 57 | business_rule | fct_claim_line | is_medical_eligible_month | warn | In-window claim lines incurred in a month without Part A + B (excluded from PMPM) | 1,887,170 | 43,586 | 2.31 | warn |
-| 58 | business_rule | fct_claim_line | principal_diagnosis_key | warn | Claim lines whose principal diagnosis has no ICD-10-CM description | 1,888,860 | 6 | 0.00 | warn |
-| 59 | business_rule | fct_drug_event | is_rx_eligible_month | warn | In-window fills in a month without Part D enrollment (excluded from Part D PMPM) | 514,805 | 3,285 | 0.64 | warn |
+| 9 | bi_compatibility | mart.* | data_type | error | No HUGEINT or DECIMAL wider than 18 digits (Power Query decimal limit) (columns) | 148 | 0 | 0.00 | pass |
+| 10 | documentation | mart.* | comment | error | Every star-schema column has a data-dictionary description (columns) | 148 | 0 | 0.00 | pass |
+| 11 | not_null | dim_beneficiary_year | birth_date | error | Required field (excl. unknown member) | 86,917 | 0 | 0.00 | pass |
+| 12 | not_null | fct_claim_line | bene_id | error | Required field | 1,888,860 | 0 | 0.00 | pass |
+| 13 | not_null | fct_claim_line | claim_id | error | Required field | 1,888,860 | 0 | 0.00 | pass |
+| 14 | not_null | fct_claim_line | from_date_key | error | Required field | 1,888,860 | 0 | 0.00 | pass |
+| 15 | not_null | fct_claim_line | paid_amount | error | Required field | 1,888,860 | 0 | 0.00 | pass |
+| 16 | not_null | fct_drug_event | service_date_key | error | Required field | 515,520 | 0 | 0.00 | pass |
+| 17 | not_null | fct_drug_event | total_drug_cost | error | Required field | 515,520 | 0 | 0.00 | pass |
+| 18 | not_null | fct_inpatient_stay | admission/discharge date | error | Required field | 19,846 | 0 | 0.00 | pass |
+| 19 | range | dim_beneficiary_year | age_at_end_of_year | error | Age 0-120 | 86,917 | 0 | 0.00 | pass |
+| 20 | range | fct_claim_line | paid_amount | error | Paid amount >= 0 | 1,888,860 | 0 | 0.00 | pass |
+| 21 | range | fct_claim_line | thru_date_key | error | Thru date >= from date | 1,888,860 | 0 | 0.00 | pass |
+| 22 | range | fct_drug_event | days_supply | error | Days supply 1-365 | 515,520 | 0 | 0.00 | pass |
+| 23 | range | fct_drug_event | total_drug_cost | error | Drug cost >= 0 | 515,520 | 0 | 0.00 | pass |
+| 24 | range | fct_inpatient_stay | length_of_stay | error | Length of stay >= 0 | 19,846 | 0 | 0.00 | pass |
+| 25 | reconciliation | fct_claim_line | paid_amount | error | Per-claim SUM(paid_amount) equals CMS header payment (claims) | 555,218 | 0 | 0.00 | pass |
+| 26 | reconciliation | fct_claim_line | row count | error | Every raw claim line lands in the fact (raw lines) | 1,888,860 | 0 | 0.00 | pass |
+| 27 | reconciliation | fct_drug_event | total_drug_cost | error | Gross cost = patient + other TrOOP + LICS + PLRO + plan paid | 515,520 | 0 | 0.00 | pass |
+| 28 | reconciliation | fct_inpatient_stay | claim_count | error | Every inpatient claim is in exactly one stay (claims) | 20,867 | 0 | 0.00 | pass |
+| 29 | relationship | fct_claim_line | bene_year_key | error | FK exists in dim_beneficiary_year | 1,888,860 | 0 | 0.00 | pass |
+| 30 | relationship | fct_claim_line | billing_provider_key | error | FK exists in dim_provider | 1,888,860 | 0 | 0.00 | pass |
+| 31 | relationship | fct_claim_line | clinician_provider_key | error | FK exists in dim_provider | 1,888,860 | 0 | 0.00 | pass |
+| 32 | relationship | fct_claim_line | from_date_key | error | FK exists in dim_date | 1,888,860 | 0 | 0.00 | pass |
+| 33 | relationship | fct_claim_line | incurred_month_key | error | FK exists in dim_date | 1,888,860 | 0 | 0.00 | pass |
+| 34 | relationship | fct_claim_line | principal_diagnosis_key | error | FK exists in dim_diagnosis | 1,888,860 | 0 | 0.00 | pass |
+| 35 | relationship | fct_claim_line | service_type_key | error | FK exists in dim_service_type | 1,888,860 | 0 | 0.00 | pass |
+| 36 | relationship | fct_drug_event | bene_year_key | error | FK exists in dim_beneficiary_year | 515,520 | 0 | 0.00 | pass |
+| 37 | relationship | fct_drug_event | prescriber_provider_key | error | FK exists in dim_provider | 515,520 | 0 | 0.00 | pass |
+| 38 | relationship | fct_drug_event | service_date_key | error | FK exists in dim_date | 515,520 | 0 | 0.00 | pass |
+| 39 | relationship | fct_inpatient_stay | principal_diagnosis_key | error | FK exists in dim_diagnosis | 19,846 | 0 | 0.00 | pass |
+| 40 | relationship | fct_member_month | bene_year_key | error | FK exists in dim_beneficiary_year | 953,004 | 0 | 0.00 | pass |
+| 41 | relationship | fct_member_month | month_key | error | FK exists in dim_date | 953,004 | 0 | 0.00 | pass |
+| 42 | unique | dim_beneficiary_year | bene_id + year | error | Natural key is unique | 86,918 | 0 | 0.00 | pass |
+| 43 | unique | dim_beneficiary_year | bene_year_key | error | Primary key is unique | 86,918 | 0 | 0.00 | pass |
+| 44 | unique | dim_date | date_key | error | Primary key is unique | 4,383 | 0 | 0.00 | pass |
+| 45 | unique | dim_diagnosis | diagnosis_code | error | Natural key is unique | 336 | 0 | 0.00 | pass |
+| 46 | unique | dim_diagnosis | diagnosis_key | error | Primary key is unique | 336 | 0 | 0.00 | pass |
+| 47 | unique | dim_provider | provider_id + id_type | error | Natural key is unique | 29,293 | 0 | 0.00 | pass |
+| 48 | unique | dim_provider | provider_key | error | Primary key is unique | 29,293 | 0 | 0.00 | pass |
+| 49 | unique | dim_service_type | service_type_key | error | Primary key is unique | 8 | 0 | 0.00 | pass |
+| 50 | unique | fct_claim_line | claim_id + line_number | error | Grain is unique | 1,888,860 | 0 | 0.00 | pass |
+| 51 | unique | fct_claim_line | claim_line_key | error | Primary key is unique | 1,888,860 | 0 | 0.00 | pass |
+| 52 | unique | fct_drug_event | pde_id | error | Grain is unique | 515,520 | 0 | 0.00 | pass |
+| 53 | unique | fct_inpatient_stay | stay_key | error | Primary key is unique | 19,846 | 0 | 0.00 | pass |
+| 54 | unique | fct_member_month | bene_id + month_key | error | Grain is unique | 953,004 | 0 | 0.00 | pass |
+| 55 | business_rule | dim_diagnosis | match_type | warn | Diagnosis codes not found exactly in FY2023 ICD-10-CM | 335 | 21 | 6.27 | warn |
+| 56 | business_rule | fct_claim_line | bene_year_key | warn | Lines mapped to the unknown beneficiary-year (-1) | 1,888,860 | 9 | 0.00 | warn |
+| 57 | business_rule | fct_claim_line | clinician_provider_key | warn | Lines with no rendering or attending NPI (-1) | 1,888,860 | 107,039 | 5.67 | warn |
+| 58 | business_rule | fct_claim_line | is_medical_eligible_month | warn | In-window claim lines incurred in a month without Part A + B (excluded from PMPM) | 1,887,170 | 43,586 | 2.31 | warn |
+| 59 | business_rule | fct_claim_line | principal_diagnosis_key | warn | Claim lines whose principal diagnosis has no ICD-10-CM description | 1,888,860 | 6 | 0.00 | warn |
+| 60 | business_rule | fct_drug_event | is_rx_eligible_month | warn | In-window fills in a month without Part D enrollment (excluded from Part D PMPM) | 514,805 | 3,285 | 0.64 | warn |

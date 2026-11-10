@@ -100,9 +100,12 @@ with tests as (
            (select count(distinct claim_id) from stg.claim_line where claim_type = 'inpatient'),
            abs((select count(distinct claim_id) from stg.claim_line where claim_type = 'inpatient') - (select sum(claim_count) from mart.fct_inpatient_stay))
 
-    ------------------------------------------------------------------ documentation
+    ------------------------------------------------------------------ documentation and BI compatibility
     union all select 'documentation', 'mart.*', 'comment', 'error', 'Every star-schema column has a data-dictionary description (columns)',
               count(*), count(*) filter (where comment is null or comment = '') from duckdb_columns() where schema_name = 'mart'
+    union all select 'bi_compatibility', 'mart.*', 'data_type', 'error', 'No HUGEINT or DECIMAL wider than 18 digits (Power Query decimal limit) (columns)',
+              count(*), count(*) filter (where data_type in ('HUGEINT', 'UHUGEINT') or (data_type like 'DECIMAL%' and numeric_precision > 18))
+              from duckdb_columns() where schema_name = 'mart'
 
     ------------------------------------------------------------------ known data conditions (warn, quantified)
     union all select 'business_rule', 'fct_claim_line', 'is_medical_eligible_month', 'warn', 'In-window claim lines incurred in a month without Part A + B (excluded from PMPM)',

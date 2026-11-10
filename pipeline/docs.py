@@ -8,6 +8,7 @@ Usage:  .venv\\Scripts\\python.exe -I pipeline\\docs.py
 """
 from __future__ import annotations
 
+import sys
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -33,24 +34,11 @@ GRAIN = {
     "dim_date": "one row per day",
     "dim_service_type": "one row per benefit category",
 }
-RELATIONSHIPS = [
-    ("fct_claim_line", "bene_year_key", "dim_beneficiary_year", "bene_year_key"),
-    ("fct_claim_line", "incurred_month_key", "dim_date", "date_key"),
-    ("fct_claim_line", "from_date_key", "dim_date", "date_key (inactive role)"),
-    ("fct_claim_line", "service_type_key", "dim_service_type", "service_type_key"),
-    ("fct_claim_line", "principal_diagnosis_key", "dim_diagnosis", "diagnosis_key"),
-    ("fct_claim_line", "billing_provider_key", "dim_provider", "provider_key"),
-    ("fct_claim_line", "clinician_provider_key", "dim_provider", "provider_key (inactive role)"),
-    ("fct_drug_event", "bene_year_key", "dim_beneficiary_year", "bene_year_key"),
-    ("fct_drug_event", "incurred_month_key", "dim_date", "date_key"),
-    ("fct_drug_event", "service_type_key", "dim_service_type", "service_type_key"),
-    ("fct_drug_event", "prescriber_provider_key", "dim_provider", "provider_key (inactive role)"),
-    ("fct_member_month", "bene_year_key", "dim_beneficiary_year", "bene_year_key"),
-    ("fct_member_month", "month_key", "dim_date", "date_key"),
-    ("fct_inpatient_stay", "bene_year_key", "dim_beneficiary_year", "bene_year_key"),
-    ("fct_inpatient_stay", "discharge_date_key", "dim_date", "date_key (inactive role)"),
-    ("fct_inpatient_stay", "principal_diagnosis_key", "dim_diagnosis", "diagnosis_key"),
-]
+# Relationships are defined once, in the Power BI model generator.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from powerbi import RELATIONSHIPS as PBI_RELATIONSHIPS  # noqa: E402
+
+RELATIONSHIPS = [(ft, fc, tt, tc + ("" if active else " (inactive role)")) for ft, fc, tt, tc, active in PBI_RELATIONSHIPS]
 
 
 def md_table(headers: list[str], rows: list[tuple], align: str | None = None) -> str:

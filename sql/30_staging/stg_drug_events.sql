@@ -23,7 +23,7 @@ select
     money(TOT_RX_CST_AMT)                        as total_drug_cost,
     money(CVRD_D_PLAN_PD_AMT)                    as covered_plan_paid_amount,
     money(NCVRD_PLAN_PD_AMT)                     as noncovered_plan_paid_amount,
-    money(CVRD_D_PLAN_PD_AMT) + money(NCVRD_PLAN_PD_AMT) as plan_paid_amount,
+    (money(CVRD_D_PLAN_PD_AMT) + money(NCVRD_PLAN_PD_AMT))::decimal(18, 2) as plan_paid_amount,
     money(PTNT_PAY_AMT)                          as patient_pay_amount,
     money(LICS_AMT)                              as lics_amount,
     money(OTHR_TROOP_AMT)                        as other_troop_amount,

@@ -1,0 +1,130 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "util_table_year",
+  "position": {
+    "x": 655,
+    "y": 470,
+    "z": 0,
+    "width": 605,
+    "height": 235,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "year"
+                }
+              },
+              "queryRef": "dim_date.year",
+              "nativeQueryRef": "year"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Medical Member Months"
+                }
+              },
+              "queryRef": "_Measures.Medical Member Months",
+              "nativeQueryRef": "Medical Member Months"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Admissions"
+                }
+              },
+              "queryRef": "_Measures.Admissions",
+              "nativeQueryRef": "Admissions"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Admits per 1,000"
+                }
+              },
+              "queryRef": "_Measures.Admits per 1,000",
+              "nativeQueryRef": "Admits per 1,000"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Days per 1,000"
+                }
+              },
+              "queryRef": "_Measures.Days per 1,000",
+              "nativeQueryRef": "Days per 1,000"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Average Length of Stay"
+                }
+              },
+              "queryRef": "_Measures.Average Length of Stay",
+              "nativeQueryRef": "Average Length of Stay"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Utilization by year'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
