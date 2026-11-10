@@ -11,7 +11,7 @@ PMPM by service type, admissions per 1,000, 30-day readmissions, top diagnoses b
 
 | Measure | Result | Where |
 | --- | --- | --- |
-| % of rows failing each test | 53 of 53 error-severity tests pass at 0%; 6 warning tests quantify known data conditions (0.0003% - 6.3%) | [docs/data_quality.md](docs/data_quality.md) |
+| % of rows failing each test | 54 of 54 error-severity tests pass at 0%; 6 warning tests quantify known data conditions (0.0003% - 6.3%) | [docs/data_quality.md](docs/data_quality.md) |
 | Medical PMPM by year | $1,345 - $1,665 (2016-2022); $1,665 in 2022 | [docs/results.md](docs/results.md#pmpm-by-year-and-service-type) |
 | 30-day readmission rate | 30.8% all-cause, 29.4% unplanned (19,532 index stays) | [docs/results.md](docs/results.md#30-day-readmissions) |
 | Share of spend from the top 5% of members | 45.4% in 2022 (range 41-49% across 2016-2022) | [docs/results.md](docs/results.md#cost-concentration) |
@@ -45,6 +45,27 @@ python -m venv .venv
 
 `build.py 40 50` reruns only the steps whose folder starts with those numbers. The build exits non-zero if any error-severity test fails.
 
+Then generate the BI deliverables from the built warehouse:
+
+```powershell
+.venv\Scripts\python.exe -I pipeline\powerbi.py    # powerbi/HCareLedger.pbip  (open in Power BI Desktop, Refresh)
+.venv\Scripts\python.exe -I pipeline\excel.py      # excel/HCareLedger_PMPM_Budget.xlsx
+```
+
+## Deliverables
+
+| | What | Guide |
+| --- | --- | --- |
+| Power BI | `powerbi/HCareLedger.pbip`: TMDL semantic model on the star schema (32 DAX measures, 19 relationships) and a PBIR report with **Cost Trend**, **Utilization** and **Readmissions** pages | [docs/powerbi.md](docs/powerbi.md) |
+| Excel | `excel/HCareLedger_PMPM_Budget.xlsx`: Power Query `qPMPM_Monthly` loading the monthly PMPM table, a PivotTable by service type and year, an XLOOKUP budget-vs-actual variance sheet, and a checks sheet | [docs/excel.md](docs/excel.md) |
+| Results | Every metric table with method notes | [docs/results.md](docs/results.md) |
+| Data quality | Raw-file profile and the % of rows failing each test | [docs/data_quality.md](docs/data_quality.md) |
+| Data dictionary | Every star-schema table and column | [docs/data_dictionary.md](docs/data_dictionary.md) |
+
+Power BI Desktop and Excel were not available on the build machine. The report JSON validates against Microsoft's
+PBIR schemas, the TMDL round-trips through Microsoft's Tabular Object Model, and the workbook passes the Open XML SDK
+validator with zero errors. Each guide lists check values to confirm after the first open.
+
 ## How it is built
 
 ```
@@ -52,7 +73,7 @@ data/raw/*.csv  ──►  raw.*      all-VARCHAR copy of every file (lossless, 
                      audit.*    profile_tables / profile_columns / profile_checks
                 ──►  stg.*      typed, conformed: one claim-line table for 7 claim types, monthly enrollment
                 ──►  mart.*     star schema (4 facts, 5 dimensions) + data-dictionary comments
-                     audit.test_results   59 tests: keys, nulls, relationships, accepted values, ranges, reconciliation
+                     audit.test_results   60 tests: keys, nulls, relationships, accepted values, ranges, reconciliation
                 ──►  rpt.*      PMPM, utilization, readmissions, top diagnoses, Part D, cost concentration
                 ──►  outputs/   Parquet for Power BI, CSV for Excel and review
 ```
@@ -99,6 +120,6 @@ These came out of profiling (step 1) and are each enforced by a test:
 - [x] 1. Load and profile every file
 - [x] 2. Star schema, tests, data dictionary
 - [x] 3. Member months, PMPM, admits/1,000, readmissions, top diagnoses, Part D per member, cost concentration
-- [ ] 4. Power BI: cost trend, utilization and readmissions pages with DAX measures
-- [ ] 5. Excel for finance: Power Query monthly PMPM, pivot by service type, XLOOKUP budget-vs-actual variance
+- [x] 4. Power BI: cost trend, utilization and readmissions pages with DAX measures (open in Desktop to confirm the check values)
+- [x] 5. Excel for finance: Power Query monthly PMPM, pivot by service type, XLOOKUP budget-vs-actual variance (open in Excel to confirm the checks)
 - [ ] 6. Stretch: compare with the [Tuva Project](https://github.com/tuva-health/tuva) PMPM and readmission marts on DuckDB

@@ -224,7 +224,7 @@ def main() -> None:
     DOCS.mkdir(exist_ok=True)
     con = duckdb.connect(str(DB_PATH), read_only=True)
     for name, fn in [("data_dictionary.md", data_dictionary), ("data_quality.md", data_quality), ("results.md", results)]:
-        (DOCS / name).write_text(fn(con), encoding="utf-8")
+        (DOCS / name).write_text(fn(con), encoding="utf-8", newline="\n")
         print(f"wrote docs/{name}")
     con.close()
 

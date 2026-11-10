@@ -1,10 +1,10 @@
 table_name,grain,column_count,row_count,distinct_ids,distinct_grain_keys,duplicate_grain_rows,distinct_benes,min_service_date,max_service_date
-dme,CLM_ID + line number,87,103828,37782,103828,0,5576,2015-01-08,2023-03-02
+hha,CLM_ID + line number,88,6215,493,6215,0,449,2015-03-09,2023-02-16
 carrier,CLM_ID + line number,96,1121004,90705,1121004,0,7971,2015-03-06,2023-03-02
 snf,CLM_ID + line number,160,12548,1632,12548,0,1466,2015-01-08,2023-02-23
-hospice,CLM_ID + line number,86,12107,1086,12107,0,1086,2014-11-18,2023-02-26
-hha,CLM_ID + line number,88,6215,493,6215,0,449,2015-03-09,2023-02-16
+dme,CLM_ID + line number,87,103828,37782,103828,0,5576,2015-01-08,2023-03-02
 inpatient,CLM_ID + line number,197,58066,20867,58066,0,5699,2015-02-25,2023-03-02
 outpatient,CLM_ID + line number,162,575092,402653,575092,0,8591,2015-03-06,2023-03-02
+hospice,CLM_ID + line number,86,12107,1086,12107,0,1086,2014-11-18,2023-02-26
 pde,PDE_ID,36,515520,515520,515520,0,7403,2015-03-08,2023-03-03
 beneficiary,BENE_ID + reference year,185,86917,10000,86917,0,10000,2015-01-01,2025-12-31
