@@ -16,6 +16,18 @@ PMPM by service type, admissions per 1,000, 30-day readmissions, top diagnoses b
 | 30-day readmission rate | 30.8% all-cause, 29.4% unplanned (19,532 index stays) | [docs/results.md](docs/results.md#30-day-readmissions) |
 | Share of spend from the top 5% of members | 45.4% in 2022 (range 41-49% across 2016-2022) | [docs/results.md](docs/results.md#cost-concentration) |
 
+## Dashboard
+
+The Power BI report, rendered in Power BI Desktop: **Cost Trend** (top), **Utilization** (left) and **Readmissions** (right).
+Each page has Year, Age band and Dual status slicers. Details in [docs/powerbi.md](docs/powerbi.md#pages).
+
+![Cost Trend page: Medical PMPM, Part D PMPM, medical paid and top 5% share cards; monthly PMPM with a rolling 12-month line; PMPM by service type; PMPM by year and service type; year-over-year change and top 5% share by year](docs/images/powerbi_cost_trend.png)
+
+<p>
+  <img src="docs/images/powerbi_utilization.png" width="49%" alt="Utilization page: admits per 1,000, length of stay, outpatient visits per 1,000 and paid per admission; admits per 1,000 by year; outpatient visits and professional claims per 1,000; top 10 diagnosis categories by medical paid; utilization by year">
+  <img src="docs/images/powerbi_readmissions.png" width="49%" alt="Readmissions page: index stays, 30-day and unplanned readmission rates, average days to readmission; readmission rate by discharge year, age band and index admission type; readmissions by discharge year">
+</p>
+
 ## Data
 
 | File | Rows | Grain |
@@ -56,7 +68,7 @@ Then generate the BI deliverables from the built warehouse:
 
 | | What | Guide |
 | --- | --- | --- |
-| Power BI | `powerbi/HCareLedger.pbip`: TMDL semantic model on the star schema (32 DAX measures, 19 relationships) and a PBIR report with **Cost Trend**, **Utilization** and **Readmissions** pages | [docs/powerbi.md](docs/powerbi.md) |
+| Power BI | `powerbi/HCareLedger.pbip`: TMDL semantic model on the star schema (33 DAX measures, 19 relationships) and a PBIR report with **Cost Trend**, **Utilization** and **Readmissions** pages | [docs/powerbi.md](docs/powerbi.md) |
 | Excel | `excel/HCareLedger_PMPM_Budget.xlsx`: Power Query `qPMPM_Monthly` loading the monthly PMPM table, a PivotTable by service type and year, an XLOOKUP budget-vs-actual variance sheet, and a checks sheet | [docs/excel.md](docs/excel.md) |
 | Results | Every metric table with method notes | [docs/results.md](docs/results.md) |
 | Data quality | Raw-file profile and the % of rows failing each test | [docs/data_quality.md](docs/data_quality.md) |

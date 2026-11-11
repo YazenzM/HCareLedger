@@ -2,3 +2,4 @@
 *.parquet binary
 *.xlsx binary
 *.pbix binary
+*.png binary

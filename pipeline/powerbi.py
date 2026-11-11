@@ -492,12 +492,13 @@ def card(name, x, measure, title, auto_units=False):
 
 def slicers(prefix: str) -> list[dict]:
     # The container title names the slicer, so the slicer's own header (the raw column name) is hidden.
+    # Top-aligned (y=0, 75 tall) to match the layout set in Power BI Desktop.
     objects = {"data": props(mode="Dropdown"), "header": props(show=False)}
     return [
-        visual(f"{prefix}_slicer_year", "slicer", 20, 15, 200, 60, {"Values": [YEAR]}, title="Year", objects=objects),
-        visual(f"{prefix}_slicer_age", "slicer", 235, 15, 200, 60, {"Values": [c("dim_beneficiary_year", "age_band", "Age band")]},
+        visual(f"{prefix}_slicer_year", "slicer", 20, 0, 200, 75, {"Values": [YEAR]}, title="Year", objects=objects),
+        visual(f"{prefix}_slicer_age", "slicer", 235, 0, 200, 75, {"Values": [c("dim_beneficiary_year", "age_band", "Age band")]},
                title="Age band", objects=objects),
-        visual(f"{prefix}_slicer_dual", "slicer", 450, 15, 200, 60, {"Values": [c("dim_beneficiary_year", "dual_status", "Dual status")]},
+        visual(f"{prefix}_slicer_dual", "slicer", 450, 0, 200, 75, {"Values": [c("dim_beneficiary_year", "dual_status", "Dual status")]},
                title="Dual status", objects=objects),
     ]
 
@@ -514,9 +515,12 @@ def pages() -> list[tuple[str, str, list[dict]]]:
                {"Category": [c("dim_date", "month_start", "Month")],
                 "Y": [m("Medical PMPM", "Monthly PMPM"), m("Medical PMPM (Rolling 12M)", "Rolling 12-month PMPM")]},
                title="Medical PMPM by month, with rolling 12-month PMPM"),
+        # Seven service types don't fit a top legend in a 425-px visual; a right-hand legend lists them all.
+        # A categorical axis keeps one column per year (a continuous axis pads the narrower plot back to 2010).
         visual("cost_column_service", "columnChart", 835, ROW2_Y, 425, ROW2_H,
                {"Category": [YEAR], "Series": [service], "Y": [m("Medical PMPM")]},
-               title="Medical PMPM by service type"),
+               title="Medical PMPM by service type",
+               objects={"legend": props(position="Right"), "categoryAxis": props(axisType="Categorical")}),
         visual("cost_matrix_pmpm", "pivotTable", 20, ROW3_Y, 800, ROW3_H,
                {"Rows": [YEAR], "Columns": [service], "Values": [m("PMPM")]},
                title="PMPM by year and service type (total = medical)"),
@@ -632,6 +636,24 @@ def write_docs(con: duckdb.DuckDBPyConnection) -> None:
         "",
         "`powerbi/HCareLedger.pbip` is a Power BI project: a TMDL semantic model plus a PBIR report with three pages",
         "(**Cost Trend**, **Utilization**, **Readmissions**). Everything is text, so changes show up as readable diffs.",
+        "",
+        "## Pages",
+        "",
+        "Rendered in Power BI Desktop with every slicer at **All**. Synthetic data: the numbers demonstrate the method only.",
+        "",
+        "**Cost Trend**: medical and Part D PMPM, monthly PMPM with a rolling 12-month line, PMPM by service type,",
+        "and year-over-year change with the top 5% share of spend.",
+        "",
+        "![Cost Trend page](images/powerbi_cost_trend.png)",
+        "",
+        "**Utilization**: admits and outpatient visits per 1,000, length of stay, paid per admission,",
+        "and the top 10 diagnosis categories by medical paid.",
+        "",
+        "![Utilization page](images/powerbi_utilization.png)",
+        "",
+        "**Readmissions**: 30-day all-cause and unplanned readmission rates by discharge year, age band and index admission type.",
+        "",
+        "![Readmissions page](images/powerbi_readmissions.png)",
         "",
         "## Open it",
         "",
