@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "util_slicer_dual",
   "position": {
-    "x": 450,
-    "y": 15,
+    "x": 450.32727272727271,
+    "y": 0,
     "z": 0,
-    "height": 60,
-    "width": 200,
+    "height": 74.472727272727269,
+    "width": 200.14545454545456,
     "tabOrder": 0
   },
   "visual": {
@@ -86,5 +86,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "bb0d1f492c081730d6d8",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_beneficiary_year"
+              }
+            },
+            "Property": "dual_status"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }
