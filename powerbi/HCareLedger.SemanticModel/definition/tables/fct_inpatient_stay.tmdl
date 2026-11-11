@@ -5,8 +5,8 @@ table fct_inpatient_stay
 	/// Surrogate primary key.
 	column stay_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: a5763466-7026-51dc-8a75-1732685a3fb6
 		summarizeBy: none
 		sourceColumn: stay_key
@@ -30,8 +30,8 @@ table fct_inpatient_stay
 	/// FK to dim_beneficiary_year for the admission year.
 	column bene_year_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 79a87a42-49fd-5a30-8717-5c92df0ab62b
 		summarizeBy: none
 		sourceColumn: bene_year_key
@@ -39,8 +39,8 @@ table fct_inpatient_stay
 	/// FK to dim_date: admission date.
 	column admission_date_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: b58a8de1-12ee-57d4-af86-f172fc1a6d0a
 		summarizeBy: none
 		sourceColumn: admission_date_key
@@ -48,8 +48,8 @@ table fct_inpatient_stay
 	/// FK to dim_date: discharge date.
 	column discharge_date_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 85bdd8cb-e798-5669-964f-7b293178090f
 		summarizeBy: none
 		sourceColumn: discharge_date_key
@@ -88,8 +88,8 @@ table fct_inpatient_stay
 	/// FK to dim_diagnosis: principal diagnosis of the first claim.
 	column principal_diagnosis_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 7f4c74a8-3e9c-5fa4-a606-5a24f5978562
 		summarizeBy: none
 		sourceColumn: principal_diagnosis_key
@@ -97,8 +97,8 @@ table fct_inpatient_stay
 	/// FK to dim_provider: admitting facility CCN.
 	column facility_provider_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: f1405078-ec4b-5aa8-8eec-5378df33ff6a
 		summarizeBy: none
 		sourceColumn: facility_provider_key
@@ -192,3 +192,4 @@ table fct_inpatient_stay
 				    Typed
 
 	annotation PBI_ResultType = Table
+

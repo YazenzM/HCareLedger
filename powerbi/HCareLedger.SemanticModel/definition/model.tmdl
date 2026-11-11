@@ -11,6 +11,8 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_QueryOrder = ["DataFolder","_Measures","dim_date","dim_service_type","dim_beneficiary_year","dim_provider","dim_diagnosis","fct_claim_line","fct_drug_event","fct_member_month","fct_inpatient_stay"]
 
+annotation PBI_ProTooling = ["DevMode"]
+
 ref table _Measures
 ref table dim_date
 ref table dim_service_type
@@ -21,3 +23,6 @@ ref table fct_claim_line
 ref table fct_drug_event
 ref table fct_member_month
 ref table fct_inpatient_stay
+
+ref cultureInfo en-US
+

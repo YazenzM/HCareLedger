@@ -5,8 +5,8 @@ table dim_service_type
 	/// Primary key.
 	column service_type_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 8fad6e36-b881-504e-b764-9f95a50ff394
 		summarizeBy: none
 		sourceColumn: service_type_key
@@ -58,3 +58,4 @@ table dim_service_type
 				    Typed
 
 	annotation PBI_ResultType = Table
+

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "cost_slicer_year",
   "position": {
-    "x": 20,
-    "y": 15,
+    "x": 19.781818181818181,
+    "y": 0,
     "z": 0,
-    "width": 200,
-    "height": 60,
+    "height": 74.472727272727269,
+    "width": 200.14545454545456,
     "tabOrder": 0
   },
   "visual": {
@@ -28,13 +28,13 @@
               },
               "queryRef": "dim_date.year",
               "nativeQueryRef": "year",
+              "active": true,
               "displayName": "Year"
             }
           ]
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "objects": {
       "data": [
         {
@@ -84,6 +84,25 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "21a0699f33255065b7e6",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "year"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

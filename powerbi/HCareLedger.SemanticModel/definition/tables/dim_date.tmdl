@@ -6,8 +6,8 @@ table dim_date
 	/// Primary key, integer YYYYMMDD.
 	column date_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 1f9acdd0-7f90-5add-9149-90cbbe365eca
 		summarizeBy: none
 		sourceColumn: date_key
@@ -15,11 +15,13 @@ table dim_date
 	/// Calendar date.
 	column date
 		dataType: dateTime
-		formatString: Short Date
 		isKey
+		formatString: Short Date
 		lineageTag: cff57c50-260f-55ef-998a-6dfa245e8b07
 		summarizeBy: none
 		sourceColumn: date
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	/// Calendar year.
 	column year
@@ -77,11 +79,13 @@ table dim_date
 		summarizeBy: none
 		sourceColumn: month_start
 
+		annotation UnderlyingDateTimeDataType = Date
+
 	/// date_key of month_start; facts carry incurred_month_key at this grain.
 	column month_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: c6a56a43-c07a-5887-99b6-0c9f8fc86c4b
 		summarizeBy: none
 		sourceColumn: month_key
@@ -141,3 +145,4 @@ table dim_date
 				    Typed
 
 	annotation PBI_ResultType = Table
+

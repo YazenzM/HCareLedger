@@ -5,8 +5,8 @@ table dim_diagnosis
 	/// Surrogate primary key.
 	column diagnosis_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: f0f3f868-5db0-57a5-8459-82b18289ee60
 		summarizeBy: none
 		sourceColumn: diagnosis_key
@@ -85,3 +85,4 @@ table dim_diagnosis
 				    Typed
 
 	annotation PBI_ResultType = Table
+

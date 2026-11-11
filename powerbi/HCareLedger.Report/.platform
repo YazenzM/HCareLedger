@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "HCareLedger"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "060d4c07-f898-4183-87a0-1fa6851b1bc2"
+  }
+}

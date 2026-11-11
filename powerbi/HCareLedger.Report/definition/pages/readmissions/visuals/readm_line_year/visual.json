@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "readm_line_year",
   "position": {
     "x": 20,
     "y": 195,
     "z": 0,
-    "width": 620,
     "height": 238,
+    "width": 620,
     "tabOrder": 0
   },
   "visual": {
@@ -28,6 +28,7 @@
               },
               "queryRef": "dim_date.year",
               "nativeQueryRef": "year",
+              "active": true,
               "displayName": "Year"
             }
           ]
@@ -68,7 +69,6 @@
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -90,6 +90,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

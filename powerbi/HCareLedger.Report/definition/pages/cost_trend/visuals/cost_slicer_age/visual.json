@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "cost_slicer_age",
   "position": {
-    "x": 235,
-    "y": 15,
+    "x": 235.05454545454546,
+    "y": 0,
     "z": 0,
-    "width": 200,
-    "height": 60,
+    "height": 74.472727272727269,
+    "width": 200.14545454545456,
     "tabOrder": 0
   },
   "visual": {
@@ -28,13 +28,13 @@
               },
               "queryRef": "dim_beneficiary_year.age_band",
               "nativeQueryRef": "age_band",
+              "active": true,
               "displayName": "Age band"
             }
           ]
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "objects": {
       "data": [
         {
@@ -84,6 +84,25 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e1486008b8e1a82a9472",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_beneficiary_year"
+              }
+            },
+            "Property": "age_band"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

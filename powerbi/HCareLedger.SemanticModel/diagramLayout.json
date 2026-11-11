@@ -1,0 +1,152 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1446.5508600776259,
+            "y": 575.80227402676667
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "25a878c3-16a2-56c3-9409-d6bdd2d28fed",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 927.681177686246,
+            "y": 172.09820484663726
+          },
+          "nodeIndex": "dim_beneficiary_year",
+          "nodeLineageTag": "b4c20b86-72d6-5d7c-9880-71c8bcfe7ae4",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 749.55741203701359,
+            "y": 526.11356909302208
+          },
+          "nodeIndex": "dim_date",
+          "nodeLineageTag": "434696da-bb4b-5d4b-9d79-540eeac25351",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 287.22184681525459,
+            "y": 1101.6045480535331
+          },
+          "nodeIndex": "dim_diagnosis",
+          "nodeLineageTag": "cc4117ec-d7af-5720-8361-fce8dc80e29f",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 320.39907167888134
+          },
+          "nodeIndex": "dim_provider",
+          "nodeLineageTag": "5fa3197b-52a1-50f9-9970-8dacd57e4a8d",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50.006702483245817,
+            "y": -50
+          },
+          "nodeIndex": "dim_service_type",
+          "nodeLineageTag": "07d05403-7717-5ade-8059-9cefe3300208",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 338.24871714644451,
+            "y": 526.15540521285482
+          },
+          "nodeIndex": "fct_claim_line",
+          "nodeLineageTag": "6e96df78-b1fb-548b-bcd3-7581a5b50990",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 485.86075879340137,
+            "y": 168.95401640122077
+          },
+          "nodeIndex": "fct_drug_event",
+          "nodeLineageTag": "cae930e7-b172-57bc-a40d-ba8c8bca59af",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 577.087406253969,
+            "y": 883.32604098160141
+          },
+          "nodeIndex": "fct_inpatient_stay",
+          "nodeLineageTag": "c259cd92-0be0-5a6a-9720-9403d3d3cb8e",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1212.5508600776259,
+            "y": 171.85421275645012
+          },
+          "nodeIndex": "fct_member_month",
+          "nodeLineageTag": "5ab4a62b-a6fc-5adb-adfb-8d87dd977f88",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

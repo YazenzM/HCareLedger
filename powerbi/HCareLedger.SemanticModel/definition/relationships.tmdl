@@ -77,3 +77,4 @@ relationship f4694234-37ca-518e-b938-4da843b8fc6c
 	isActive: false
 	fromColumn: fct_inpatient_stay.discharge_date_key
 	toColumn: dim_date.date_key
+

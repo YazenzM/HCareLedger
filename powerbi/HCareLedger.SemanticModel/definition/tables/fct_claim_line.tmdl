@@ -5,8 +5,8 @@ table fct_claim_line
 	/// Surrogate primary key.
 	column claim_line_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: b482d80c-5583-56f6-89d2-6d4f10be73db
 		summarizeBy: none
 		sourceColumn: claim_line_key
@@ -29,8 +29,8 @@ table fct_claim_line
 	/// FK to dim_service_type.
 	column service_type_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: e0073a47-5922-58d8-9bbe-a9ae058e376d
 		summarizeBy: none
 		sourceColumn: service_type_key
@@ -38,8 +38,8 @@ table fct_claim_line
 	/// FK to dim_beneficiary_year for the year of the claim from date; -1 when no enrollment record exists.
 	column bene_year_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 567e4211-cec1-5a71-8c24-2afc354b3784
 		summarizeBy: none
 		sourceColumn: bene_year_key
@@ -55,8 +55,8 @@ table fct_claim_line
 	/// FK to dim_date: claim from date (min across lines).
 	column from_date_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 9b00d729-3592-51e7-adc9-840201ce2646
 		summarizeBy: none
 		sourceColumn: from_date_key
@@ -64,8 +64,8 @@ table fct_claim_line
 	/// FK to dim_date: claim thru date (max across lines).
 	column thru_date_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 1b46c0a4-169a-52ab-8a1c-01dd6733d277
 		summarizeBy: none
 		sourceColumn: thru_date_key
@@ -73,8 +73,8 @@ table fct_claim_line
 	/// FK to dim_date: first day of the claim from-date month. Used for PMPM.
 	column incurred_month_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: f817ad9f-d83d-502d-9743-890854e9c490
 		summarizeBy: none
 		sourceColumn: incurred_month_key
@@ -82,8 +82,8 @@ table fct_claim_line
 	/// FK to dim_diagnosis: claim principal diagnosis.
 	column principal_diagnosis_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: b71efbac-35de-55bc-9875-509283c74c41
 		summarizeBy: none
 		sourceColumn: principal_diagnosis_key
@@ -91,8 +91,8 @@ table fct_claim_line
 	/// FK to dim_provider: facility CCN for institutional claims, billing NPI for professional/DME.
 	column billing_provider_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: dc36c9c7-1623-52ff-8eaf-296904707267
 		summarizeBy: none
 		sourceColumn: billing_provider_key
@@ -100,8 +100,8 @@ table fct_claim_line
 	/// FK to dim_provider: rendering NPI, else attending NPI.
 	column clinician_provider_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 89a22906-6e83-5736-850f-6f6d4e912580
 		summarizeBy: none
 		sourceColumn: clinician_provider_key
@@ -190,3 +190,4 @@ table fct_claim_line
 				    Typed
 
 	annotation PBI_ResultType = Table
+

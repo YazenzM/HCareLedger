@@ -5,8 +5,8 @@ table fct_drug_event
 	/// Surrogate primary key.
 	column drug_event_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: fb0e55bc-c285-5b8f-a4d3-89aa1c8d7d9a
 		summarizeBy: none
 		sourceColumn: drug_event_key
@@ -21,8 +21,8 @@ table fct_drug_event
 	/// FK to dim_service_type (always Part D).
 	column service_type_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 9ed450ce-4fb5-51ea-b0c7-55c5f931719d
 		summarizeBy: none
 		sourceColumn: service_type_key
@@ -30,8 +30,8 @@ table fct_drug_event
 	/// FK to dim_beneficiary_year for the service year.
 	column bene_year_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 027f30fe-a85f-539d-9318-f8656e157852
 		summarizeBy: none
 		sourceColumn: bene_year_key
@@ -47,8 +47,8 @@ table fct_drug_event
 	/// FK to dim_date: date of fill.
 	column service_date_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 7936c980-1b8e-5cec-92f3-d8bea8cba1db
 		summarizeBy: none
 		sourceColumn: service_date_key
@@ -56,8 +56,8 @@ table fct_drug_event
 	/// FK to dim_date: date the plan paid.
 	column paid_date_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 9072b8d3-e4c6-5ad0-bf81-b41de9ca2b7e
 		summarizeBy: none
 		sourceColumn: paid_date_key
@@ -65,8 +65,8 @@ table fct_drug_event
 	/// FK to dim_date: first day of the fill month.
 	column incurred_month_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 8b2a4238-0f87-5baf-865f-3a43dafff08f
 		summarizeBy: none
 		sourceColumn: incurred_month_key
@@ -74,8 +74,8 @@ table fct_drug_event
 	/// FK to dim_provider: prescriber NPI.
 	column prescriber_provider_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: c0917759-5a39-5e54-aa7c-f088f208bd16
 		summarizeBy: none
 		sourceColumn: prescriber_provider_key
@@ -213,3 +213,4 @@ table fct_drug_event
 				    Typed
 
 	annotation PBI_ResultType = Table
+

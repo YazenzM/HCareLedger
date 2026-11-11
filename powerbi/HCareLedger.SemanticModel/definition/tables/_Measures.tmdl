@@ -24,15 +24,13 @@ table _Measures
 		lineageTag: ae9f4c6f-3d80-5525-82f8-0983dccc4db6
 
 	/// Medical paid per medical member month.
-	measure 'Medical PMPM' =
-			DIVIDE([Medical Paid], [Medical Member Months])
+	measure 'Medical PMPM' = DIVIDE([Medical Paid], [Medical Member Months])
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		displayFolder: 1. Cost
 		lineageTag: cf9991e7-4866-54c9-89e8-b4d78b1fdfe3
 
 	/// Medical PMPM for the same period one year earlier.
-	measure 'Medical PMPM PY' =
-			CALCULATE([Medical PMPM], SAMEPERIODLASTYEAR(dim_date[date]))
+	measure 'Medical PMPM PY' = CALCULATE([Medical PMPM], SAMEPERIODLASTYEAR(dim_date[date]))
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		displayFolder: 1. Cost
 		lineageTag: 833f0f11-3efd-5b77-b679-8898e76240d1
@@ -81,15 +79,13 @@ table _Measures
 		lineageTag: 54534c1c-fc45-54f1-8f56-bce8f4030d03
 
 	/// Part D plan paid per Part D member month.
-	measure 'Part D PMPM' =
-			DIVIDE([Part D Plan Paid], [Part D Member Months])
+	measure 'Part D PMPM' = DIVIDE([Part D Plan Paid], [Part D Member Months])
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		displayFolder: 1. Cost
 		lineageTag: 5e00a3fe-aee7-5a47-963b-67eef3cae1c4
 
 	/// Part D plan paid per average enrolled member per year (member months / 12).
-	measure 'Part D Plan Paid PMPY' =
-			DIVIDE([Part D Plan Paid], DIVIDE([Part D Member Months], 12))
+	measure 'Part D Plan Paid PMPY' = DIVIDE([Part D Plan Paid], DIVIDE([Part D Member Months], 12))
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		displayFolder: 1. Cost
 		lineageTag: 1300da08-54e9-5ef4-a7ea-6d36afab2956
@@ -106,8 +102,7 @@ table _Measures
 		lineageTag: cb273947-551f-5472-a9f4-01ee203d3f3f
 
 	/// Medical paid plus Part D plan paid.
-	measure 'Total Spend' =
-			[Medical Paid] + [Part D Plan Paid]
+	measure 'Total Spend' = [Medical Paid] + [Part D Plan Paid]
 		formatString: \$#,0;(\$#,0);\$#,0
 		displayFolder: 1. Cost
 		lineageTag: c2705029-39f2-5dc5-83b4-3e7acd444f46
@@ -158,8 +153,7 @@ table _Measures
 		lineageTag: 1349ac0b-b109-549e-af68-42b32b03a8ae
 
 	/// Admissions per 1,000 members per year = admissions / medical member months x 12,000.
-	measure 'Admits per 1,000' =
-			DIVIDE([Admissions] * 12000, [Medical Member Months])
+	measure 'Admits per 1,000' = DIVIDE([Admissions] * 12000, [Medical Member Months])
 		formatString: #,0.0
 		displayFolder: 2. Utilization
 		lineageTag: 05081fb5-b919-53ef-a581-3f667a07a6fe
@@ -176,15 +170,13 @@ table _Measures
 		lineageTag: 3aeadb6e-9a40-54ca-add3-5b46b7b47586
 
 	/// Inpatient days per 1,000 members per year.
-	measure 'Days per 1,000' =
-			DIVIDE([Inpatient Days] * 12000, [Medical Member Months])
+	measure 'Days per 1,000' = DIVIDE([Inpatient Days] * 12000, [Medical Member Months])
 		formatString: #,0.0
 		displayFolder: 2. Utilization
 		lineageTag: 71c8b24a-84aa-5dcf-adb5-d943041cef6f
 
 	/// Inpatient days per admission.
-	measure 'Average Length of Stay' =
-			DIVIDE([Inpatient Days], [Admissions])
+	measure 'Average Length of Stay' = DIVIDE([Inpatient Days], [Admissions])
 		formatString: 0.00
 		displayFolder: 2. Utilization
 		lineageTag: d2db6272-3032-5abd-9878-22f0ce6886b2
@@ -213,8 +205,7 @@ table _Measures
 		lineageTag: 4d94d259-443f-5f33-9706-73d9c6e77893
 
 	/// Outpatient visits per 1,000 members per year.
-	measure 'Outpatient Visits per 1,000' =
-			DIVIDE([Outpatient Visits] * 12000, [Medical Member Months])
+	measure 'Outpatient Visits per 1,000' = DIVIDE([Outpatient Visits] * 12000, [Medical Member Months])
 		formatString: #,0.0
 		displayFolder: 2. Utilization
 		lineageTag: 357574f6-81e8-57d0-98ee-1fee70402c6d
@@ -233,8 +224,7 @@ table _Measures
 		lineageTag: a18241e9-7387-52d5-91cb-af5783881df1
 
 	/// Professional claims per 1,000 members per year.
-	measure 'Professional Claims per 1,000' =
-			DIVIDE([Professional Claims] * 12000, [Medical Member Months])
+	measure 'Professional Claims per 1,000' = DIVIDE([Professional Claims] * 12000, [Medical Member Months])
 		formatString: #,0.0
 		displayFolder: 2. Utilization
 		lineageTag: c5b15bd5-c575-5d4f-92f1-fc381b0f213e
@@ -250,15 +240,13 @@ table _Measures
 		lineageTag: b2790397-6c9e-5458-bc0d-b2b9d6f3266b
 
 	/// Medical paid for the 10 costliest diagnosis categories; blank for the rest, so visuals show only the top 10.
-	measure 'Medical Paid (Top 10 Dx)' =
-			IF([Diagnosis Cost Rank] <= 10, [Medical Paid])
+	measure 'Medical Paid (Top 10 Dx)' = IF([Diagnosis Cost Rank] <= 10, [Medical Paid])
 		formatString: \$#,0;(\$#,0);\$#,0
 		displayFolder: 2. Utilization
 		lineageTag: b4da4d3f-81f1-5821-ae65-ea698fa41e71
 
 	/// Share of medical paid across the diagnoses in context.
-	measure '% of Medical Paid' =
-			DIVIDE([Medical Paid], CALCULATE([Medical Paid], ALLSELECTED(dim_diagnosis)))
+	measure '% of Medical Paid' = DIVIDE([Medical Paid], CALCULATE([Medical Paid], ALLSELECTED(dim_diagnosis)))
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 2. Utilization
 		lineageTag: fbb262c9-8ff9-521a-8e5e-271153477892
@@ -275,29 +263,25 @@ table _Measures
 		lineageTag: 4c0b01db-2455-515b-b2da-1e97c6951cda
 
 	/// Index stays followed by any admission 1-30 days after discharge.
-	measure 'Readmissions (30-day)' =
-			CALCULATE([Index Stays], fct_inpatient_stay[has_readmission_30d] = TRUE())
+	measure 'Readmissions (30-day)' = CALCULATE([Index Stays], fct_inpatient_stay[has_readmission_30d] = TRUE())
 		formatString: #,0
 		displayFolder: 3. Readmissions
 		lineageTag: 2ca8dc49-96d4-5505-9839-b720545f721b
 
 	/// 30-day all-cause readmission rate.
-	measure 'Readmission Rate' =
-			DIVIDE([Readmissions (30-day)], [Index Stays])
+	measure 'Readmission Rate' = DIVIDE([Readmissions (30-day)], [Index Stays])
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 3. Readmissions
 		lineageTag: 9d302f61-71d7-5dd7-8563-a2cf48341b04
 
 	/// Index stays followed by a non-elective admission 1-30 days after discharge (elective = planned proxy).
-	measure 'Unplanned Readmissions (30-day)' =
-			CALCULATE([Index Stays], fct_inpatient_stay[has_unplanned_readmission_30d] = TRUE())
+	measure 'Unplanned Readmissions (30-day)' = CALCULATE([Index Stays], fct_inpatient_stay[has_unplanned_readmission_30d] = TRUE())
 		formatString: #,0
 		displayFolder: 3. Readmissions
 		lineageTag: df66bfca-6a33-5858-a8e1-37af4c605dde
 
 	/// 30-day unplanned readmission rate.
-	measure 'Unplanned Readmission Rate' =
-			DIVIDE([Unplanned Readmissions (30-day)], [Index Stays])
+	measure 'Unplanned Readmission Rate' = DIVIDE([Unplanned Readmissions (30-day)], [Index Stays])
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 3. Readmissions
 		lineageTag: 2651a16d-b9f0-5435-b973-0697eca1994f
@@ -325,3 +309,4 @@ table _Measures
 		source = #table(type table [Placeholder = text], {})
 
 	annotation PBI_ResultType = Table
+

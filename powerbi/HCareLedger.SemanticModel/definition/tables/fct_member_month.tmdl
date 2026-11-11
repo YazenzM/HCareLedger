@@ -5,8 +5,8 @@ table fct_member_month
 	/// Surrogate primary key.
 	column member_month_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 7d548046-ab93-5c12-8c2b-cc2bd1f178ed
 		summarizeBy: none
 		sourceColumn: member_month_key
@@ -14,8 +14,8 @@ table fct_member_month
 	/// FK to dim_beneficiary_year.
 	column bene_year_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 2ae5c826-588f-583d-86e9-ed5d030eac26
 		summarizeBy: none
 		sourceColumn: bene_year_key
@@ -31,8 +31,8 @@ table fct_member_month
 	/// FK to dim_date (first day of the month).
 	column month_key
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
 		lineageTag: 5b7a44f2-cc7e-5a0d-a45e-b1cb005e4ba9
 		summarizeBy: none
 		sourceColumn: month_key
@@ -112,3 +112,4 @@ table fct_member_month
 				    Typed
 
 	annotation PBI_ResultType = Table
+

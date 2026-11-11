@@ -3,3 +3,4 @@ expression DataFolder = "D:\Projects\HCareLedger\outputs\powerbi" meta [IsParame
 	lineageTag: de31a2a6-cf90-5f0a-817e-63a467859425
 
 	annotation PBI_ResultType = Text
+

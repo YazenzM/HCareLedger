@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "util_bar_dx",
   "position": {
     "x": 20,
     "y": 445,
     "z": 0,
-    "width": 620,
     "height": 265,
+    "width": 620,
     "tabOrder": 0
   },
   "visual": {
@@ -28,6 +28,7 @@
               },
               "queryRef": "dim_diagnosis.category_description",
               "nativeQueryRef": "category_description",
+              "active": true,
               "displayName": "Diagnosis category"
             }
           ]
@@ -67,11 +68,9 @@
             },
             "direction": "Descending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
-    "drillFilterOtherVisuals": true,
     "objects": {
       "labels": [
         {
@@ -169,6 +168,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }
