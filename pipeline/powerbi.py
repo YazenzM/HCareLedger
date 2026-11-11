@@ -61,6 +61,72 @@ SORT_BY = {
     ("dim_service_type", "service_type"): "sort_order",
 }
 
+# Report theme. Series colors are a categorical palette validated for color-vision deficiency on a white
+# surface (adjacent-pair CVD dE >= 13.9, normal-vision dE >= 19.6); slot order is part of that validation.
+# Chrome (titles, headers, page) is navy and teal. pipeline/excel.py uses the same palette.
+PALETTE = ["#1F5FA6", "#EB6834", "#12A39A", "#EDA100", "#E87BA4", "#008300", "#6250D6", "#E34948"]
+NAVY, TEAL, INK, INK2, MUTED = "#1F3A5F", "#12A39A", "#1F2A37", "#52514E", "#898781"
+GRID, PAGE_BG, SURFACE = "#E1E0D9", "#F4F6F8", "#FFFFFF"
+THEME_FILE = "HCareLedgerTheme.json"
+
+
+def solid(color: str) -> dict:
+    return {"solid": {"color": color}}
+
+
+THEME = {
+    "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.159.json",
+    "name": "HCareLedger",
+    "dataColors": PALETTE,
+    "foreground": INK,
+    "foregroundNeutralSecondary": INK2,
+    "foregroundNeutralTertiary": MUTED,
+    "background": SURFACE,
+    "backgroundLight": PAGE_BG,
+    "backgroundNeutral": GRID,
+    "tableAccent": TEAL,
+    "good": "#0CA30C", "neutral": "#FAB219", "bad": "#D03B3B",
+    "maximum": PALETTE[0], "center": "#F0EFEC", "minimum": PALETTE[7],
+    "textClasses": {
+        "callout": {"fontSize": 26, "fontFace": "Segoe UI Semibold", "color": NAVY},
+        "title": {"fontSize": 12, "fontFace": "Segoe UI Semibold", "color": NAVY},
+        "header": {"fontSize": 12, "fontFace": "Segoe UI Semibold", "color": INK},
+        "label": {"fontSize": 10, "fontFace": "Segoe UI", "color": INK2},
+    },
+    "visualStyles": {
+        "*": {"*": {
+            "background": [{"show": True, "color": solid(SURFACE), "transparency": 0}],
+            "border": [{"show": True, "color": solid(GRID), "radius": 8}],
+            "dropShadow": [{"show": False}],
+            "title": [{"show": True, "fontColor": solid(NAVY), "fontSize": 11, "bold": True}],
+            "valueAxis": [{"gridlineColor": solid(GRID), "labelColor": solid(MUTED), "titleColor": solid(INK2)}],
+            "categoryAxis": [{"labelColor": solid(MUTED), "titleColor": solid(INK2), "gridlineShow": False}],
+            "legend": [{"labelColor": solid(INK2), "position": "Top"}],
+        }},
+        "page": {"*": {
+            "background": [{"color": solid(PAGE_BG), "transparency": 0}],
+            "outspace": [{"color": solid(PAGE_BG), "transparency": 0}],
+        }},
+        "card": {"*": {
+            "labels": [{"color": solid(NAVY), "fontSize": 26}],
+            "categoryLabels": [{"show": False}],
+        }},
+        "lineChart": {"*": {"lineStyles": [{"strokeWidth": 2}]}},
+        "tableEx": {"*": {
+            "columnHeaders": [{"fontColor": solid("#FFFFFF"), "backColor": solid(NAVY), "bold": True}],
+            "values": [{"backColorSecondary": solid(PAGE_BG)}],
+            "grid": [{"gridHorizontalColor": solid(GRID)}],
+        }},
+        "pivotTable": {"*": {
+            "columnHeaders": [{"fontColor": solid("#FFFFFF"), "backColor": solid(NAVY), "bold": True}],
+            "rowHeaders": [{"fontColor": solid(INK)}],
+            "values": [{"backColorSecondary": solid(PAGE_BG)}],
+            "grid": [{"gridHorizontalColor": solid(GRID)}],
+        }},
+        "slicer": {"*": {"header": [{"fontColor": solid(NAVY)}]}},
+    },
+}
+
 USD0 = r"\$#,0;(\$#,0);\$#,0"
 USD2 = r"\$#,0.00;(\$#,0.00);\$#,0.00"
 PCT1 = "0.0%;-0.0%;0.0%"
@@ -87,11 +153,12 @@ MEASURES = [
      "Medical PMPM for the same period one year earlier.",
      "CALCULATE([Medical PMPM], SAMEPERIODLASTYEAR(dim_date[date]))"),
     ("1. Cost", "Medical PMPM YoY %", PCT1,
-     "Change in medical PMPM versus the same period one year earlier.",
-     "DIVIDE([Medical PMPM] - [Medical PMPM PY], [Medical PMPM PY])"),
+     "Change in medical PMPM versus the prior year. Blank unless exactly one year is in context.",
+     "IF(\n    HASONEVALUE(dim_date[year]),\n    DIVIDE([Medical PMPM] - [Medical PMPM PY], [Medical PMPM PY])\n)"),
     ("1. Cost", "Medical PMPM (Rolling 12M)", USD2,
-     "Medical PMPM over the 12 months ending at the latest date in context.",
-     "VAR LastDate = MAX(dim_date[date])\nRETURN\n    CALCULATE([Medical PMPM], DATESINPERIOD(dim_date[date], LastDate, -12, MONTH))"),
+     "Medical PMPM over the 12 months ending at the latest date in context. Blank for periods with no member months, so the line stops where the data stops.",
+     "VAR PeriodEnd = MAX(dim_date[date])\nRETURN\n    IF(\n        [Medical Member Months] > 0,\n"
+     "        CALCULATE([Medical PMPM], DATESINPERIOD(dim_date[date], PeriodEnd, -12, MONTH))\n    )"),
     ("1. Cost", "Part D Plan Paid", USD0,
      "Part D plan paid (covered + non-covered) on fills in Part D member months, Mar-2015 to Feb-2023.",
      "CALCULATE(\n    SUM(fct_drug_event[plan_paid_amount]),\n    fct_drug_event[is_in_reporting_window] = TRUE(),\n    fct_drug_event[is_rx_eligible_month] = TRUE()\n)"),
@@ -114,9 +181,17 @@ MEASURES = [
      "Share of total spend (medical + Part D) from the costliest 5% of members with at least one medical member month in context. Zero-spend members count in the population.",
      "VAR MemberSpend =\n    ADDCOLUMNS(\n        FILTER(VALUES(dim_beneficiary_year[bene_id]), [Medical Member Months] > 0),\n"
      "        \"@Spend\", [Medical Paid] + [Part D Plan Paid]\n    )\n"
-     "VAR MemberCount = COUNTROWS(MemberSpend)\nVAR TopCount = ROUNDUP(MemberCount * 0.05, 0)\n"
-     "VAR TopSpend = SUMX(TOPN(TopCount, MemberSpend, [@Spend], DESC), [@Spend])\n"
+     "VAR MemberCount = COUNTROWS(MemberSpend)\nVAR TopMembers = ROUNDUP(MemberCount * 0.05, 0)\n"
+     "VAR TopSpend = SUMX(TOPN(TopMembers, MemberSpend, [@Spend], DESC), [@Spend])\n"
      "RETURN\n    DIVIDE(TopSpend, SUMX(MemberSpend, [@Spend]))"),
+    ("1. Cost", "Top 5% Share of Spend (Annual)", PCT1,
+     "Top 5% share computed per calendar year, averaged over the complete (12-month) years in context. A single partial "
+     "year (2015, 2023) shows its own value. Avoids pooling members with different exposure lengths across years.",
+     "VAR YearsInContext = FILTER(VALUES(dim_date[year]), [Medical Member Months] > 0)\n"
+     "VAR FullYears =\n    FILTER(\n        YearsInContext,\n"
+     "        CALCULATE(DISTINCTCOUNT(fct_member_month[month_key]), fct_member_month[is_in_reporting_window] = TRUE()) = 12\n    )\n"
+     "RETURN\n    IF(\n        COUNTROWS(FullYears) > 0,\n        AVERAGEX(FullYears, [Top 5% Share of Spend]),\n"
+     "        [Top 5% Share of Spend]\n    )"),
     # ---------------------------------------------------------------- utilization
     ("2. Utilization", "Admissions", "#,0",
      "Acute inpatient stays admitted in the window during a medical member month (overlapping and transfer claims merged).",
@@ -342,28 +417,58 @@ def build_model(con: duckdb.DuckDBPyConnection) -> None:
 
 
 # ------------------------------------------------------------------------------------------ report
-def m(name: str) -> tuple:
-    return ("Measure", "_Measures", name)
+# Field references: (kind, table, name, display label). The label replaces the raw column/measure name in
+# headers, legends and axis titles, so readers see "Service type" rather than "service_type".
+def m(name: str, label: str | None = None) -> tuple:
+    return ("Measure", "_Measures", name, label)
 
 
-def c(table: str, name: str) -> tuple:
-    return ("Column", table, name)
+def c(table: str, name: str, label: str | None = None) -> tuple:
+    return ("Column", table, name, label)
+
+
+YEAR = ("Column", "dim_date", "year", "Year")
 
 
 def field(ref: tuple) -> dict:
-    kind, entity, prop = ref
+    kind, entity, prop = ref[:3]
     return {kind: {"Expression": {"SourceRef": {"Entity": entity}}, "Property": prop}}
+
+
+def projection(ref: tuple) -> dict:
+    p = {"field": field(ref), "queryRef": f"{ref[1]}.{ref[2]}", "nativeQueryRef": ref[2]}
+    if ref[3]:
+        p["displayName"] = ref[3]
+    return p
 
 
 def literal(value: str) -> dict:
     return {"expr": {"Literal": {"Value": value}}}
 
 
+def props(**kw) -> list[dict]:
+    """One formatting-object entry; Python values become Power BI literals (True -> true, 9 -> 9D, 'x' -> 'x')."""
+    conv = lambda v: "true" if v is True else "false" if v is False else f"{v}D" if isinstance(v, (int, float)) else f"'{v}'"
+    return [{"properties": {k: literal(conv(v)) for k, v in kw.items()}}]
+
+
+# Bar charts: direct data labels on every bar, so the value axis is redundant and hidden.
+BAR_OBJECTS = {
+    "labels": props(show=True, fontSize=9),
+    "valueAxis": props(show=False),
+    "categoryAxis": props(fontSize=9, maxMarginFactor=45, innerPadding=15),
+}
+# Dollar bars: label in millions ($229M rather than $0.23bn).
+DOLLAR_BAR_OBJECTS = BAR_OBJECTS | {"labels": props(show=True, fontSize=9, labelDisplayUnits=1000000, labelPrecision=0)}
+
+# Layout grid (1280 x 720 page): slicers, KPI cards, two chart rows.
+CARD_Y, CARD_H = 88, 92
+ROW2_Y, ROW2_H = 195, 238
+ROW3_Y, ROW3_H = 445, 265
+
+
 def visual(name, vtype, x, y, w, h, roles, title=None, sort=None, objects=None, z=0):
-    query_state = {
-        role: {"projections": [{"field": field(r), "queryRef": f"{r[1]}.{r[2]}", "nativeQueryRef": r[2]} for r in refs]}
-        for role, refs in roles.items()
-    }
+    query_state = {role: {"projections": [projection(r) for r in refs]} for role, refs in roles.items()}
     v = {"visualType": vtype, "query": {"queryState": query_state}, "drillFilterOtherVisuals": True}
     if sort:
         ref, direction = sort
@@ -381,37 +486,43 @@ def visual(name, vtype, x, y, w, h, roles, title=None, sort=None, objects=None, 
 
 
 def card(name, x, measure, title, auto_units=False):
-    objects = None if auto_units else {"labels": [{"properties": {"labelDisplayUnits": literal("1D")}}]}
-    return visual(name, "card", x, 90, 297, 110, {"Values": [m(measure)]}, title=title, objects=objects)
+    objects = None if auto_units else {"labels": props(labelDisplayUnits=1)}
+    return visual(name, "card", x, CARD_Y, 297, CARD_H, {"Values": [m(measure)]}, title=title, objects=objects)
 
 
 def slicers(prefix: str) -> list[dict]:
-    dropdown = {"data": [{"properties": {"mode": literal("'Dropdown'")}}]}
+    # The container title names the slicer, so the slicer's own header (the raw column name) is hidden.
+    objects = {"data": props(mode="Dropdown"), "header": props(show=False)}
     return [
-        visual(f"{prefix}_slicer_year", "slicer", 20, 15, 200, 60, {"Values": [c("dim_date", "year")]}, title="Year", objects=dropdown),
-        visual(f"{prefix}_slicer_age", "slicer", 235, 15, 200, 60, {"Values": [c("dim_beneficiary_year", "age_band")]}, title="Age band", objects=dropdown),
-        visual(f"{prefix}_slicer_dual", "slicer", 450, 15, 200, 60, {"Values": [c("dim_beneficiary_year", "dual_status")]}, title="Dual status", objects=dropdown),
+        visual(f"{prefix}_slicer_year", "slicer", 20, 15, 200, 60, {"Values": [YEAR]}, title="Year", objects=objects),
+        visual(f"{prefix}_slicer_age", "slicer", 235, 15, 200, 60, {"Values": [c("dim_beneficiary_year", "age_band", "Age band")]},
+               title="Age band", objects=objects),
+        visual(f"{prefix}_slicer_dual", "slicer", 450, 15, 200, 60, {"Values": [c("dim_beneficiary_year", "dual_status", "Dual status")]},
+               title="Dual status", objects=objects),
     ]
 
 
 def pages() -> list[tuple[str, str, list[dict]]]:
     xs = [20, 332, 644, 956]  # four 297px cards with 15px gutters
+    service = c("dim_service_type", "service_type", "Service type")
     cost = slicers("cost") + [
         card("cost_card_pmpm", xs[0], "Medical PMPM", "Medical PMPM"),
         card("cost_card_partd", xs[1], "Part D PMPM", "Part D PMPM"),
         card("cost_card_paid", xs[2], "Medical Paid", "Medical paid", auto_units=True),
-        card("cost_card_top5", xs[3], "Top 5% Share of Spend", "Spend from top 5% of members"),
-        visual("cost_line_monthly", "lineChart", 20, 215, 800, 240,
-               {"Category": [c("dim_date", "month_start")], "Y": [m("Medical PMPM"), m("Medical PMPM (Rolling 12M)")]},
+        card("cost_card_top5", xs[3], "Top 5% Share of Spend (Annual)", "Top 5% share of spend (full-yr avg)"),
+        visual("cost_line_monthly", "lineChart", 20, ROW2_Y, 800, ROW2_H,
+               {"Category": [c("dim_date", "month_start", "Month")],
+                "Y": [m("Medical PMPM", "Monthly PMPM"), m("Medical PMPM (Rolling 12M)", "Rolling 12-month PMPM")]},
                title="Medical PMPM by month, with rolling 12-month PMPM"),
-        visual("cost_column_service", "columnChart", 835, 215, 425, 240,
-               {"Category": [c("dim_date", "year")], "Series": [c("dim_service_type", "service_type")], "Y": [m("Medical PMPM")]},
+        visual("cost_column_service", "columnChart", 835, ROW2_Y, 425, ROW2_H,
+               {"Category": [YEAR], "Series": [service], "Y": [m("Medical PMPM")]},
                title="Medical PMPM by service type"),
-        visual("cost_matrix_pmpm", "pivotTable", 20, 470, 800, 235,
-               {"Rows": [c("dim_date", "year")], "Columns": [c("dim_service_type", "service_type")], "Values": [m("PMPM")]},
+        visual("cost_matrix_pmpm", "pivotTable", 20, ROW3_Y, 800, ROW3_H,
+               {"Rows": [YEAR], "Columns": [service], "Values": [m("PMPM")]},
                title="PMPM by year and service type (total = medical)"),
-        visual("cost_table_trend", "tableEx", 835, 470, 425, 235,
-               {"Values": [c("dim_date", "year"), m("Medical PMPM"), m("Medical PMPM YoY %"), m("Top 5% Share of Spend")]},
+        visual("cost_table_trend", "tableEx", 835, ROW3_Y, 425, ROW3_H,
+               {"Values": [YEAR, m("Medical PMPM", "PMPM"), m("Medical PMPM YoY %", "YoY"),
+                           m("Top 5% Share of Spend (Annual)", "Top 5% share")]},
                title="Trend and cost concentration"),
     ]
     util = slicers("util") + [
@@ -419,17 +530,21 @@ def pages() -> list[tuple[str, str, list[dict]]]:
         card("util_card_alos", xs[1], "Average Length of Stay", "Average length of stay (days)"),
         card("util_card_op", xs[2], "Outpatient Visits per 1,000", "Outpatient visits per 1,000"),
         card("util_card_paid_adm", xs[3], "Paid per Admission", "Paid per admission"),
-        visual("util_column_admits", "clusteredColumnChart", 20, 215, 620, 240,
-               {"Category": [c("dim_date", "year")], "Y": [m("Admits per 1,000")]}, title="Inpatient admits per 1,000 by year"),
-        visual("util_line_visits", "lineChart", 655, 215, 605, 240,
-               {"Category": [c("dim_date", "year")], "Y": [m("Outpatient Visits per 1,000"), m("Professional Claims per 1,000")]},
+        visual("util_column_admits", "clusteredColumnChart", 20, ROW2_Y, 620, ROW2_H,
+               {"Category": [YEAR], "Y": [m("Admits per 1,000")]}, title="Inpatient admits per 1,000 by year",
+               objects={"labels": props(show=True, fontSize=9), "valueAxis": props(show=False)}),
+        visual("util_line_visits", "lineChart", 655, ROW2_Y, 605, ROW2_H,
+               {"Category": [YEAR], "Y": [m("Outpatient Visits per 1,000", "Outpatient visits per 1,000"),
+                                          m("Professional Claims per 1,000", "Professional claims per 1,000")]},
                title="Outpatient visits and professional claims per 1,000"),
-        visual("util_bar_dx", "clusteredBarChart", 20, 470, 620, 235,
-               {"Category": [c("dim_diagnosis", "category_description")], "Y": [m("Medical Paid (Top 10 Dx)")]},
-               title="Top 10 diagnosis categories by medical paid", sort=(m("Medical Paid (Top 10 Dx)"), "Descending")),
-        visual("util_table_year", "tableEx", 655, 470, 605, 235,
-               {"Values": [c("dim_date", "year"), m("Medical Member Months"), m("Admissions"), m("Admits per 1,000"),
-                           m("Days per 1,000"), m("Average Length of Stay")]},
+        visual("util_bar_dx", "clusteredBarChart", 20, ROW3_Y, 620, ROW3_H,
+               {"Category": [c("dim_diagnosis", "category_description", "Diagnosis category")],
+                "Y": [m("Medical Paid (Top 10 Dx)", "Medical paid")]},
+               title="Top 10 diagnosis categories by medical paid", sort=(m("Medical Paid (Top 10 Dx)"), "Descending"),
+               objects=DOLLAR_BAR_OBJECTS),
+        visual("util_table_year", "tableEx", 655, ROW3_Y, 605, ROW3_H,
+               {"Values": [YEAR, m("Medical Member Months", "Member months"), m("Admissions", "Admits"),
+                           m("Admits per 1,000", "Admits/1K"), m("Days per 1,000", "Days/1K"), m("Average Length of Stay", "ALOS")]},
                title="Utilization by year"),
     ]
     readm = slicers("readm") + [
@@ -437,18 +552,18 @@ def pages() -> list[tuple[str, str, list[dict]]]:
         card("readm_card_rate", xs[1], "Readmission Rate", "30-day readmission rate"),
         card("readm_card_unplanned", xs[2], "Unplanned Readmission Rate", "Unplanned readmission rate"),
         card("readm_card_days", xs[3], "Avg Days to Readmission", "Avg days to readmission"),
-        visual("readm_line_year", "lineChart", 20, 215, 620, 240,
-               {"Category": [c("dim_date", "year")], "Y": [m("Readmission Rate"), m("Unplanned Readmission Rate")]},
+        visual("readm_line_year", "lineChart", 20, ROW2_Y, 620, ROW2_H,
+               {"Category": [YEAR], "Y": [m("Readmission Rate", "All-cause"), m("Unplanned Readmission Rate", "Unplanned")]},
                title="30-day readmission rate by discharge year"),
-        visual("readm_bar_age", "clusteredBarChart", 655, 215, 605, 240,
-               {"Category": [c("dim_beneficiary_year", "age_band")], "Y": [m("Readmission Rate")]},
-               title="Readmission rate by age band"),
-        visual("readm_bar_type", "clusteredBarChart", 20, 470, 620, 235,
-               {"Category": [c("fct_inpatient_stay", "admission_type")], "Y": [m("Readmission Rate")]},
-               title="Readmission rate by index admission type"),
-        visual("readm_table_year", "tableEx", 655, 470, 605, 235,
-               {"Values": [c("dim_date", "year"), m("Index Stays"), m("Readmissions (30-day)"), m("Readmission Rate"),
-                           m("Unplanned Readmission Rate")]},
+        visual("readm_bar_age", "clusteredBarChart", 655, ROW2_Y, 605, ROW2_H,
+               {"Category": [c("dim_beneficiary_year", "age_band", "Age band")], "Y": [m("Readmission Rate")]},
+               title="Readmission rate by age band", objects=BAR_OBJECTS),
+        visual("readm_bar_type", "clusteredBarChart", 20, ROW3_Y, 620, ROW3_H,
+               {"Category": [c("fct_inpatient_stay", "admission_type", "Admission type")], "Y": [m("Readmission Rate")]},
+               title="Readmission rate by index admission type", objects=BAR_OBJECTS),
+        visual("readm_table_year", "tableEx", 655, ROW3_Y, 605, ROW3_H,
+               {"Values": [YEAR, m("Index Stays", "Index stays"), m("Readmissions (30-day)", "Readmissions"),
+                           m("Readmission Rate", "Rate"), m("Unplanned Readmission Rate", "Unplanned rate")]},
                title="Readmissions by discharge year"),
     ]
     return [("cost_trend", "Cost Trend", cost), ("utilization", "Utilization", util), ("readmissions", "Readmissions", readm)]
@@ -462,7 +577,19 @@ def build_report() -> None:
         "datasetReference": {"byPath": {"path": f"../{NAME}.SemanticModel"}},
     })
     write_json(d / "version.json", {"$schema": f"{SCHEMA}/item/report/definition/versionMetadata/1.0.0/schema.json", "version": "2.0.0"})
-    write_json(d / "report.json", {"$schema": f"{SCHEMA}/item/report/definition/report/3.0.0/schema.json", "themeCollection": {}})
+    write_json(RPT / "StaticResources" / "RegisteredResources" / THEME_FILE, THEME)
+    write_json(d / "report.json", {
+        "$schema": f"{SCHEMA}/item/report/definition/report/3.0.0/schema.json",
+        "themeCollection": {"customTheme": {
+            "name": THEME_FILE,
+            "reportVersionAtImport": {"visual": "2.4.0", "report": "3.0.0", "page": "2.0.0"},
+            "type": "RegisteredResources",
+        }},
+        "resourcePackages": [{
+            "name": "RegisteredResources", "type": "RegisteredResources",
+            "items": [{"name": THEME_FILE, "path": THEME_FILE, "type": "CustomTheme"}],
+        }],
+    })
     page_list = pages()
     write_json(d / "pages" / "pages.json", {
         "$schema": f"{SCHEMA}/item/report/definition/pagesMetadata/1.0.0/schema.json",
@@ -490,6 +617,8 @@ CHECK_VALUES = [  # (visual / filter context, measure, SQL source of the expecte
     ("No filters", "Readmission Rate", "select readmission_rate_pct || '%' from rpt.readmission_yearly where period = 'All years'"),
     ("No filters", "Unplanned Readmission Rate", "select unplanned_readmission_rate_pct || '%' from rpt.readmission_yearly where period = 'All years'"),
     ("Year = 2022", "Top 5% Share of Spend", "select top_5pct_share || '%' from rpt.cost_concentration where period = '2022'"),
+    ("No filters (card)", "Top 5% Share of Spend (Annual)",
+     "select round(avg(top_5pct_share), 2) || '% (mean of 2016-2022)' from rpt.cost_concentration where year between 2016 and 2022"),
     ("Top diagnosis bar, rank 1", "Medical Paid (Top 10 Dx)", "select category_description || ': ' || paid_amount from rpt.top_diagnosis_categories where cost_rank = 1"),
 ]
 
@@ -529,6 +658,18 @@ def write_docs(con: duckdb.DuckDBPyConnection) -> None:
         "Inactive relationships are role-playing dates or providers, used through `USERELATIONSHIP`",
         "(readmission measures date index stays by **discharge**, everything else by admission or incurred month).",
         "`dim_date` is marked as the date table, auto date/time is off, and implicit measures are discouraged.",
+        "",
+        "## Theme",
+        "",
+        f"`HCareLedger.Report/StaticResources/RegisteredResources/{THEME_FILE}` (registered in `report.json`): navy titles and",
+        "table headers, a light gray-blue page with white rounded visuals, and an 8-color series palette in a fixed order:",
+        "",
+        " ".join(f"`{c}`" for c in PALETTE),
+        "",
+        "The palette was checked for color-vision deficiency on the white visual background (worst adjacent-pair",
+        "CVD delta E 13.9, normal-vision 19.6). Slot order is part of that check, so reorder only by re-validating.",
+        "Two slots (yellow, pink) are below 3:1 contrast on white; every chart using them has a legend and a table view.",
+        "To try another theme: **View > Themes**, or edit the JSON and reopen the project.",
         "",
         "| From | To | Active |",
         "| --- | --- | --- |",

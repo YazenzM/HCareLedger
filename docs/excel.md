@@ -50,6 +50,12 @@ What the Variance sheet shows with the default year. Budget = prior-year actual 
 
 Trend assumptions: Inpatient 4.0%, SNF 3.0%, Home Health 2.5%, Hospice 3.0%, Outpatient 5.0%, Professional 3.5%, DME 2.0%, Part D 6.0%.
 
+## Colors
+
+The workbook theme uses the same palette as the Power BI report (navy and teal chrome; accents 1-6 = the first six
+series colors from `pipeline/powerbi.py`), so built-in table and PivotTable styles and any chart you add match the
+report. Sheet tabs: navy = report sheets, teal = budget inputs, gray = data and checks. Yellow cells are inputs.
+
 ## How the file is built and checked
 
 openpyxl writes the sheets, tables, formulas, validation and conditional formatting. openpyxl cannot create a

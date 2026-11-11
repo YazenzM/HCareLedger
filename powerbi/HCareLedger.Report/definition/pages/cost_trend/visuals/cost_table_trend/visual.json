@@ -3,10 +3,10 @@
   "name": "cost_table_trend",
   "position": {
     "x": 835,
-    "y": 470,
+    "y": 445,
     "z": 0,
     "width": 425,
-    "height": 235,
+    "height": 265,
     "tabOrder": 0
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_date.year",
-              "nativeQueryRef": "year"
+              "nativeQueryRef": "year",
+              "displayName": "Year"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "_Measures.Medical PMPM",
-              "nativeQueryRef": "Medical PMPM"
+              "nativeQueryRef": "Medical PMPM",
+              "displayName": "PMPM"
             },
             {
               "field": {
@@ -55,7 +57,8 @@
                 }
               },
               "queryRef": "_Measures.Medical PMPM YoY %",
-              "nativeQueryRef": "Medical PMPM YoY %"
+              "nativeQueryRef": "Medical PMPM YoY %",
+              "displayName": "YoY"
             },
             {
               "field": {
@@ -65,11 +68,12 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Top 5% Share of Spend"
+                  "Property": "Top 5% Share of Spend (Annual)"
                 }
               },
-              "queryRef": "_Measures.Top 5% Share of Spend",
-              "nativeQueryRef": "Top 5% Share of Spend"
+              "queryRef": "_Measures.Top 5% Share of Spend (Annual)",
+              "nativeQueryRef": "Top 5% Share of Spend (Annual)",
+              "displayName": "Top 5% share"
             }
           ]
         }

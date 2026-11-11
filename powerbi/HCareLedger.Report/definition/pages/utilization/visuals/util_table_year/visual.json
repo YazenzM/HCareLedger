@@ -3,10 +3,10 @@
   "name": "util_table_year",
   "position": {
     "x": 655,
-    "y": 470,
+    "y": 445,
     "z": 0,
     "width": 605,
-    "height": 235,
+    "height": 265,
     "tabOrder": 0
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_date.year",
-              "nativeQueryRef": "year"
+              "nativeQueryRef": "year",
+              "displayName": "Year"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "_Measures.Medical Member Months",
-              "nativeQueryRef": "Medical Member Months"
+              "nativeQueryRef": "Medical Member Months",
+              "displayName": "Member months"
             },
             {
               "field": {
@@ -55,7 +57,8 @@
                 }
               },
               "queryRef": "_Measures.Admissions",
-              "nativeQueryRef": "Admissions"
+              "nativeQueryRef": "Admissions",
+              "displayName": "Admits"
             },
             {
               "field": {
@@ -69,7 +72,8 @@
                 }
               },
               "queryRef": "_Measures.Admits per 1,000",
-              "nativeQueryRef": "Admits per 1,000"
+              "nativeQueryRef": "Admits per 1,000",
+              "displayName": "Admits/1K"
             },
             {
               "field": {
@@ -83,7 +87,8 @@
                 }
               },
               "queryRef": "_Measures.Days per 1,000",
-              "nativeQueryRef": "Days per 1,000"
+              "nativeQueryRef": "Days per 1,000",
+              "displayName": "Days/1K"
             },
             {
               "field": {
@@ -97,7 +102,8 @@
                 }
               },
               "queryRef": "_Measures.Average Length of Stay",
-              "nativeQueryRef": "Average Length of Stay"
+              "nativeQueryRef": "Average Length of Stay",
+              "displayName": "ALOS"
             }
           ]
         }

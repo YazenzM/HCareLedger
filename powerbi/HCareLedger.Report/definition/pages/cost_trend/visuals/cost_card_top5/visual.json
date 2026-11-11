@@ -3,10 +3,10 @@
   "name": "cost_card_top5",
   "position": {
     "x": 956,
-    "y": 90,
+    "y": 88,
     "z": 0,
     "width": 297,
-    "height": 110,
+    "height": 92,
     "tabOrder": 0
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Top 5% Share of Spend"
+                  "Property": "Top 5% Share of Spend (Annual)"
                 }
               },
-              "queryRef": "_Measures.Top 5% Share of Spend",
-              "nativeQueryRef": "Top 5% Share of Spend"
+              "queryRef": "_Measures.Top 5% Share of Spend (Annual)",
+              "nativeQueryRef": "Top 5% Share of Spend (Annual)"
             }
           ]
         }
@@ -63,7 +63,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Spend from top 5% of members'"
+                  "Value": "'Top 5% share of spend (full-yr avg)'"
                 }
               }
             }

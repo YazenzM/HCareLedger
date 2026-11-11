@@ -3,10 +3,10 @@
   "name": "cost_line_monthly",
   "position": {
     "x": 20,
-    "y": 215,
+    "y": 195,
     "z": 0,
     "width": 800,
-    "height": 240,
+    "height": 238,
     "tabOrder": 0
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_date.month_start",
-              "nativeQueryRef": "month_start"
+              "nativeQueryRef": "month_start",
+              "displayName": "Month"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "_Measures.Medical PMPM",
-              "nativeQueryRef": "Medical PMPM"
+              "nativeQueryRef": "Medical PMPM",
+              "displayName": "Monthly PMPM"
             },
             {
               "field": {
@@ -59,7 +61,8 @@
                 }
               },
               "queryRef": "_Measures.Medical PMPM (Rolling 12M)",
-              "nativeQueryRef": "Medical PMPM (Rolling 12M)"
+              "nativeQueryRef": "Medical PMPM (Rolling 12M)",
+              "displayName": "Rolling 12-month PMPM"
             }
           ]
         }

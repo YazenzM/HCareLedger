@@ -24,6 +24,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
 
+import sys
+
 import duckdb
 from openpyxl import Workbook
 from openpyxl.formatting.rule import CellIsRule, FormulaRule
@@ -31,6 +33,10 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.worksheet.table import Table, TableStyleInfo
+
+# One palette for Power BI and Excel: defined (and CVD-validated) in pipeline/powerbi.py.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from powerbi import PAGE_BG, PALETTE  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = ROOT / "data" / "hcareledger.duckdb"
@@ -53,6 +59,10 @@ BUDGET_YEARS = list(range(2016, 2023))
 
 # Styling
 NAVY = "1F3A5F"
+TEAL = "12A39A"
+# Workbook theme colors (drive Excel table/pivot styles and the color picker): series palette as accents 1-6.
+THEME_COLORS = {"dk2": NAVY, "lt2": PAGE_BG.lstrip("#"), **{f"accent{i + 1}": c.lstrip("#") for i, c in enumerate(PALETTE[:6])}}
+TAB_COLORS = {"README": NAVY, "Variance": NAVY, "Pivot": NAVY, "Budget": TEAL, "PMPM_Data": "898781", "Checks": "898781"}
 TITLE = Font(name="Calibri", size=16, bold=True, color=NAVY)
 SUBTLE = Font(name="Calibri", size=10, italic=True, color="595959")
 BOLD = Font(bold=True)
@@ -477,7 +487,7 @@ def pivot_parts(monthly, years):
         f'<colFields count="1"><field x="{[c for c, _ in COLUMNS].index("year")}"/></colFields>'
         f'<colItems count="{n_cols + 1}">' + "".join(item(k) for k in range(n_cols)) + '<i t="grand"><x/></i></colItems>'
         f'<dataFields count="1"><dataField name="PMPM ($)" fld="{len(COLUMNS)}" baseField="0" baseItem="0" numFmtId="4"/></dataFields>'
-        '<pivotTableStyleInfo name="PivotStyleMedium9" showRowHeaders="1" showColHeaders="1" showRowStripes="0" '
+        '<pivotTableStyleInfo name="PivotStyleMedium2" showRowHeaders="1" showColHeaders="1" showRowStripes="0" '
         'showColStripes="0" showLastColumn="1"/></pivotTableDefinition>'
     )
     return cache, table
@@ -578,6 +588,13 @@ def inject(path: Path, monthly, years) -> None:
 
     files["xl/styles.xml"] = re.sub(r"(<font>)(.*?)(</font>)", reorder_font, text("xl/styles.xml"), flags=re.S).encode("utf-8")
 
+    # --- workbook theme colors
+    theme = text("xl/theme/theme1.xml")
+    for slot, hex_ in THEME_COLORS.items():
+        theme = re.sub(rf"<a:{slot}>.*?</a:{slot}>", f'<a:{slot}><a:srgbClr val="{hex_}"/></a:{slot}>', theme, count=1, flags=re.S)
+    theme = re.sub(r'(<a:clrScheme name=")[^"]*"', r'\1HCareLedger"', theme, count=1)
+    files["xl/theme/theme1.xml"] = theme.encode("utf-8")
+
     # --- content types
     ct = text("[Content_Types].xml")
     overrides = [("/xl/pivotCache/pivotCacheDefinition1.xml", CT["pivotCache"]), ("/xl/pivotTables/pivotTable1.xml", CT["pivotTable"]),
@@ -645,6 +662,12 @@ def write_docs(monthly, budget, year=2022) -> None:
         "",
         "Trend assumptions: " + ", ".join(f"{s} {100 * t:.1f}%" for s, t in TREND.items()) + ".",
         "",
+        "## Colors",
+        "",
+        "The workbook theme uses the same palette as the Power BI report (navy and teal chrome; accents 1-6 = the first six",
+        "series colors from `pipeline/powerbi.py`), so built-in table and PivotTable styles and any chart you add match the",
+        "report. Sheet tabs: navy = report sheets, teal = budget inputs, gray = data and checks. Yellow cells are inputs.",
+        "",
         "## How the file is built and checked",
         "",
         "openpyxl writes the sheets, tables, formulas, validation and conditional formatting. openpyxl cannot create a",
@@ -681,6 +704,7 @@ def main() -> None:
     wb.calculation.fullCalcOnLoad = True
     for ws in wb.worksheets:      # exactly one selected tab, or Excel opens with sheets grouped
         ws.sheet_view.tabSelected = ws.title == "Variance"
+        ws.sheet_properties.tabColor = TAB_COLORS[ws.title]
     wb.active = wb.sheetnames.index("Variance")
     OUT.parent.mkdir(exist_ok=True)
     wb.save(OUT)

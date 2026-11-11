@@ -62,9 +62,12 @@ Then generate the BI deliverables from the built warehouse:
 | Data quality | Raw-file profile and the % of rows failing each test | [docs/data_quality.md](docs/data_quality.md) |
 | Data dictionary | Every star-schema table and column | [docs/data_dictionary.md](docs/data_dictionary.md) |
 
-Power BI Desktop and Excel were not available on the build machine. The report JSON validates against Microsoft's
-PBIR schemas, the TMDL round-trips through Microsoft's Tabular Object Model, and the workbook passes the Open XML SDK
-validator with zero errors. Each guide lists check values to confirm after the first open.
+Both share one navy-and-teal theme with a series palette checked for color-vision deficiency.
+
+The Power BI report was tested in Power BI Desktop: all 33 measures compile in its engine, every check value in
+[docs/powerbi.md](docs/powerbi.md) matches the SQL results, and all three pages were rendered and reviewed.
+Excel was not available on the build machine; the workbook passes the Open XML SDK validator with zero errors, and its
+Checks sheet confirms the numbers on first open.
 
 ## How it is built
 

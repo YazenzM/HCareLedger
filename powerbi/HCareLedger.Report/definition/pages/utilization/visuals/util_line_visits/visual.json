@@ -3,10 +3,10 @@
   "name": "util_line_visits",
   "position": {
     "x": 655,
-    "y": 215,
+    "y": 195,
     "z": 0,
     "width": 605,
-    "height": 240,
+    "height": 238,
     "tabOrder": 0
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_date.year",
-              "nativeQueryRef": "year"
+              "nativeQueryRef": "year",
+              "displayName": "Year"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "_Measures.Outpatient Visits per 1,000",
-              "nativeQueryRef": "Outpatient Visits per 1,000"
+              "nativeQueryRef": "Outpatient Visits per 1,000",
+              "displayName": "Outpatient visits per 1,000"
             },
             {
               "field": {
@@ -59,7 +61,8 @@
                 }
               },
               "queryRef": "_Measures.Professional Claims per 1,000",
-              "nativeQueryRef": "Professional Claims per 1,000"
+              "nativeQueryRef": "Professional Claims per 1,000",
+              "displayName": "Professional claims per 1,000"
             }
           ]
         }

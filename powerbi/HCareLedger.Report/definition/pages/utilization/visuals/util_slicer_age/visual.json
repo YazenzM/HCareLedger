@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_beneficiary_year.age_band",
-              "nativeQueryRef": "age_band"
+              "nativeQueryRef": "age_band",
+              "displayName": "Age band"
             }
           ]
         }
@@ -42,6 +43,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

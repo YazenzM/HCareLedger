@@ -33,6 +33,7 @@ Each DAX measure should reproduce the SQL report table it mirrors.
 | No filters | Readmission Rate | 30.84% |
 | No filters | Unplanned Readmission Rate | 29.41% |
 | Year = 2022 | Top 5% Share of Spend | 45.38% |
+| No filters (card) | Top 5% Share of Spend (Annual) | 44.7% (mean of 2016-2022) |
 | Top diagnosis bar, rank 1 | Medical Paid (Top 10 Dx) | Chronic kidney disease (CKD): 229326290.40 |
 
 ## Model
@@ -41,6 +42,18 @@ Star schema: 4 fact tables, 5 dimensions, measures in `_Measures`. All relations
 Inactive relationships are role-playing dates or providers, used through `USERELATIONSHIP`
 (readmission measures date index stays by **discharge**, everything else by admission or incurred month).
 `dim_date` is marked as the date table, auto date/time is off, and implicit measures are discouraged.
+
+## Theme
+
+`HCareLedger.Report/StaticResources/RegisteredResources/HCareLedgerTheme.json` (registered in `report.json`): navy titles and
+table headers, a light gray-blue page with white rounded visuals, and an 8-color series palette in a fixed order:
+
+`#1F5FA6` `#EB6834` `#12A39A` `#EDA100` `#E87BA4` `#008300` `#6250D6` `#E34948`
+
+The palette was checked for color-vision deficiency on the white visual background (worst adjacent-pair
+CVD delta E 13.9, normal-vision 19.6). Slot order is part of that check, so reorder only by re-validating.
+Two slots (yellow, pink) are below 3:1 contrast on white; every chart using them has a legend and a table view.
+To try another theme: **View > Themes**, or edit the JSON and reopen the project.
 
 | From | To | Active |
 | --- | --- | --- |
@@ -99,18 +112,24 @@ DIVIDE([Medical Paid], [Medical Member Months])
 CALCULATE([Medical PMPM], SAMEPERIODLASTYEAR(dim_date[date]))
 ```
 
-**Medical PMPM YoY %**: Change in medical PMPM versus the same period one year earlier.
+**Medical PMPM YoY %**: Change in medical PMPM versus the prior year. Blank unless exactly one year is in context.
 
 ```dax
-DIVIDE([Medical PMPM] - [Medical PMPM PY], [Medical PMPM PY])
+IF(
+    HASONEVALUE(dim_date[year]),
+    DIVIDE([Medical PMPM] - [Medical PMPM PY], [Medical PMPM PY])
+)
 ```
 
-**Medical PMPM (Rolling 12M)**: Medical PMPM over the 12 months ending at the latest date in context.
+**Medical PMPM (Rolling 12M)**: Medical PMPM over the 12 months ending at the latest date in context. Blank for periods with no member months, so the line stops where the data stops.
 
 ```dax
-VAR LastDate = MAX(dim_date[date])
+VAR PeriodEnd = MAX(dim_date[date])
 RETURN
-    CALCULATE([Medical PMPM], DATESINPERIOD(dim_date[date], LastDate, -12, MONTH))
+    IF(
+        [Medical Member Months] > 0,
+        CALCULATE([Medical PMPM], DATESINPERIOD(dim_date[date], PeriodEnd, -12, MONTH))
+    )
 ```
 
 **Part D Plan Paid**: Part D plan paid (covered + non-covered) on fills in Part D member months, Mar-2015 to Feb-2023.
@@ -169,10 +188,27 @@ VAR MemberSpend =
         "@Spend", [Medical Paid] + [Part D Plan Paid]
     )
 VAR MemberCount = COUNTROWS(MemberSpend)
-VAR TopCount = ROUNDUP(MemberCount * 0.05, 0)
-VAR TopSpend = SUMX(TOPN(TopCount, MemberSpend, [@Spend], DESC), [@Spend])
+VAR TopMembers = ROUNDUP(MemberCount * 0.05, 0)
+VAR TopSpend = SUMX(TOPN(TopMembers, MemberSpend, [@Spend], DESC), [@Spend])
 RETURN
     DIVIDE(TopSpend, SUMX(MemberSpend, [@Spend]))
+```
+
+**Top 5% Share of Spend (Annual)**: Top 5% share computed per calendar year, averaged over the complete (12-month) years in context. A single partial year (2015, 2023) shows its own value. Avoids pooling members with different exposure lengths across years.
+
+```dax
+VAR YearsInContext = FILTER(VALUES(dim_date[year]), [Medical Member Months] > 0)
+VAR FullYears =
+    FILTER(
+        YearsInContext,
+        CALCULATE(DISTINCTCOUNT(fct_member_month[month_key]), fct_member_month[is_in_reporting_window] = TRUE()) = 12
+    )
+RETURN
+    IF(
+        COUNTROWS(FullYears) > 0,
+        AVERAGEX(FullYears, [Top 5% Share of Spend]),
+        [Top 5% Share of Spend]
+    )
 ```
 
 ### 2. Utilization

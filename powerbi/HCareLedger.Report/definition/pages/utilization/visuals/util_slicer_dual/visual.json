@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_beneficiary_year.dual_status",
-              "nativeQueryRef": "dual_status"
+              "nativeQueryRef": "dual_status",
+              "displayName": "Dual status"
             }
           ]
         }
@@ -42,6 +43,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

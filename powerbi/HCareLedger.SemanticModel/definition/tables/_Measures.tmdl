@@ -37,18 +37,24 @@ table _Measures
 		displayFolder: 1. Cost
 		lineageTag: 833f0f11-3efd-5b77-b679-8898e76240d1
 
-	/// Change in medical PMPM versus the same period one year earlier.
+	/// Change in medical PMPM versus the prior year. Blank unless exactly one year is in context.
 	measure 'Medical PMPM YoY %' =
-			DIVIDE([Medical PMPM] - [Medical PMPM PY], [Medical PMPM PY])
+			IF(
+			    HASONEVALUE(dim_date[year]),
+			    DIVIDE([Medical PMPM] - [Medical PMPM PY], [Medical PMPM PY])
+			)
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 1. Cost
 		lineageTag: 293bae1c-db0e-5432-897c-5f567653fc66
 
-	/// Medical PMPM over the 12 months ending at the latest date in context.
+	/// Medical PMPM over the 12 months ending at the latest date in context. Blank for periods with no member months, so the line stops where the data stops.
 	measure 'Medical PMPM (Rolling 12M)' =
-			VAR LastDate = MAX(dim_date[date])
+			VAR PeriodEnd = MAX(dim_date[date])
 			RETURN
-			    CALCULATE([Medical PMPM], DATESINPERIOD(dim_date[date], LastDate, -12, MONTH))
+			    IF(
+			        [Medical Member Months] > 0,
+			        CALCULATE([Medical PMPM], DATESINPERIOD(dim_date[date], PeriodEnd, -12, MONTH))
+			    )
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		displayFolder: 1. Cost
 		lineageTag: 91409727-bbd5-57bf-b16a-80645d6f64d5
@@ -114,13 +120,31 @@ table _Measures
 			        "@Spend", [Medical Paid] + [Part D Plan Paid]
 			    )
 			VAR MemberCount = COUNTROWS(MemberSpend)
-			VAR TopCount = ROUNDUP(MemberCount * 0.05, 0)
-			VAR TopSpend = SUMX(TOPN(TopCount, MemberSpend, [@Spend], DESC), [@Spend])
+			VAR TopMembers = ROUNDUP(MemberCount * 0.05, 0)
+			VAR TopSpend = SUMX(TOPN(TopMembers, MemberSpend, [@Spend], DESC), [@Spend])
 			RETURN
 			    DIVIDE(TopSpend, SUMX(MemberSpend, [@Spend]))
 		formatString: 0.0%;-0.0%;0.0%
 		displayFolder: 1. Cost
 		lineageTag: 576e2d69-9e28-51a1-bb25-abe1ec6da35b
+
+	/// Top 5% share computed per calendar year, averaged over the complete (12-month) years in context. A single partial year (2015, 2023) shows its own value. Avoids pooling members with different exposure lengths across years.
+	measure 'Top 5% Share of Spend (Annual)' =
+			VAR YearsInContext = FILTER(VALUES(dim_date[year]), [Medical Member Months] > 0)
+			VAR FullYears =
+			    FILTER(
+			        YearsInContext,
+			        CALCULATE(DISTINCTCOUNT(fct_member_month[month_key]), fct_member_month[is_in_reporting_window] = TRUE()) = 12
+			    )
+			RETURN
+			    IF(
+			        COUNTROWS(FullYears) > 0,
+			        AVERAGEX(FullYears, [Top 5% Share of Spend]),
+			        [Top 5% Share of Spend]
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 1. Cost
+		lineageTag: 1d9b7021-4445-56b6-ab8b-66ba9e547a13
 
 	/// Acute inpatient stays admitted in the window during a medical member month (overlapping and transfer claims merged).
 	measure Admissions =

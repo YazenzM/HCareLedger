@@ -3,10 +3,10 @@
   "name": "cost_matrix_pmpm",
   "position": {
     "x": 20,
-    "y": 470,
+    "y": 445,
     "z": 0,
     "width": 800,
-    "height": 235,
+    "height": 265,
     "tabOrder": 0
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_date.year",
-              "nativeQueryRef": "year"
+              "nativeQueryRef": "year",
+              "displayName": "Year"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "dim_service_type.service_type",
-              "nativeQueryRef": "service_type"
+              "nativeQueryRef": "service_type",
+              "displayName": "Service type"
             }
           ]
         },

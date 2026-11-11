@@ -3,10 +3,10 @@
   "name": "cost_card_paid",
   "position": {
     "x": 644,
-    "y": 90,
+    "y": 88,
     "z": 0,
     "width": 297,
-    "height": 110,
+    "height": 92,
     "tabOrder": 0
   },
   "visual": {
